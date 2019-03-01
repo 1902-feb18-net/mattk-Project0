@@ -43,7 +43,7 @@ namespace Project0.DataAccess
             modelBuilder.Entity<CupcakeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__CupcakeO__C3905BCF880A7579");
+                    .HasName("PK__CupcakeO__C3905BCFF4EB05AA");
 
                 entity.ToTable("CupcakeOrder", "Project0");
 

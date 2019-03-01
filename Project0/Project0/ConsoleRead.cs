@@ -6,10 +6,10 @@ namespace Project0
 {
     public static class ConsoleRead
     {
-        //public static void GetMenuInput(out string input)
-        //{
-        //    input = Console.ReadLine().ToUpper();
-        //}
+        public static void GetMenuInput(out string input)
+        {
+            input = Console.ReadLine().ToUpper();
+        }
 
         //public static void StoreOrders(List<Location> storeLocations)
         //{

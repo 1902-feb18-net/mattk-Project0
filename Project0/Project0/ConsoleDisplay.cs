@@ -6,22 +6,22 @@ namespace Project0
 {
     public static class ConsoleDisplay
     {
-        //public static void DisplayMenu()
-        //{
-        //    Console.WriteLine();
-        //    Console.WriteLine("'S': Add a store location to the database.");
-        //    Console.WriteLine("'C': Add a customer to the database.");
-        //    Console.WriteLine("'O': Add an order to the database.");
-        //    Console.WriteLine("'SL': Get a list of available stores and their id numbers.");
-        //    Console.WriteLine("'SO': Get a store's order history.");
-        //    Console.WriteLine("'CL': Get a list of available customers and their information.");
-        //    Console.WriteLine("'CS': Search for customers by name.");
-        //    Console.WriteLine("'CO': Get a customer's order history.");
-        //    Console.WriteLine("'OL': Get a list of all orders that have been placed.");
-        //    Console.WriteLine("'OR': Get a customer's recommended order.");
-        //    Console.WriteLine();
-        //    Console.WriteLine("Please type a selection, or type 'q' to quit: ");
-        //}
+        public static void DisplayMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("'S': Add a store location to the database.");
+            Console.WriteLine("'C': Add a customer to the database.");
+            Console.WriteLine("'O': Add an order to the database.");
+            Console.WriteLine("'SL': Get a list of available stores and their id numbers.");
+            Console.WriteLine("'SO': Get a store's order history.");
+            Console.WriteLine("'CL': Get a list of available customers and their information.");
+            Console.WriteLine("'CS': Search for customers by name.");
+            Console.WriteLine("'CO': Get a customer's order history.");
+            Console.WriteLine("'OL': Get a list of all orders that have been placed.");
+            Console.WriteLine("'OR': Get a customer's recommended order.");
+            Console.WriteLine();
+            Console.WriteLine("Please type a selection, or type 'q' to quit: ");
+        }
 
         //public static void StoreList(List<Location> storeLocations)
         //{
