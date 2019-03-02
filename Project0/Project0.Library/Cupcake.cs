@@ -6,7 +6,8 @@ namespace Project0.Library
 {
     public class Cupcake
     {
+        public int Id { get; set; }
         public string Type { get; set; }
-        public double Cost { get; set; }
+        public decimal Cost { get; set; }
     }
 }

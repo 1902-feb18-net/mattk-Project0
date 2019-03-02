@@ -131,19 +131,14 @@ namespace Project0
         {
             Console.WriteLine("List of Cupcakes:");
             Console.WriteLine();
-
-
-            Console.WriteLine("Vanilla");
-            Console.WriteLine("Chocolate");
-            Console.WriteLine("ChocPeanutButter");
-            Console.WriteLine("RaspAmaretto");
-            Console.WriteLine("ChocPeppermint");
-            Console.WriteLine("MintOreo");
-            Console.WriteLine("Coconut");
-            Console.WriteLine("Lemon");
+            var cupcakes = p0Repo.GetAllCupcakes();
+            foreach (var item in cupcakes)
+            {
+                Console.WriteLine($"{item.Id}: {item.Type}");
+            }
+           
             Console.WriteLine();
         }
-
 
     }
 }

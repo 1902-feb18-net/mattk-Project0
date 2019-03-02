@@ -202,44 +202,42 @@ namespace Project0
             }
         }
 
-        //public static Cupcake GetCupcake(Project0Repo p0Repo)
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
+        public static int GetCupcake(Project0Repo p0Repo)
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    ConsoleDisplay.CupcakeList(p0Repo);
-        //    Console.WriteLine("Please enter the name of a cupcake as it appears on the list:");
-        //    var input = Console.ReadLine();
+            ConsoleDisplay.CupcakeList(p0Repo);
+            Console.WriteLine("Please enter the number of a cupcake as it appears on the list:");
+            var input = Console.ReadLine();
 
-        //    //if (p0Repo.CheckCupcakeExists())
+            if (int.TryParse(input, out var cupcakeId))
+            {
+                return cupcakeId;
+            }
+            else
+            {
+                logger.Error($"Invalid input {input}");
+                return -1;
+            }
+        }
 
-                
+        public static int GetCupcakeQuantity()
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    //        CupcakeNum cupcakeType = (CupcakeNum)Enum.Parse(typeof(CupcakeNum), input);
-        //    //    Cupcake lookupCupcake = Cupcake.FindCupcake(cupcakeType);
-        //    //    return (cupcakeType, lookupCupcake);
-            
-        //    //    logger.Error(ex);
-        //    //    return null;
-        //    //}
-        //}
+            Console.WriteLine("Please enter the quantity you would like to order:");
+            var input = Console.ReadLine();
 
-        //public static int GetCupcakeQuantity()
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
-
-        //    Console.WriteLine("Please enter the quantity you would like to order:");
-        //    var input = Console.ReadLine();
-
-        //    if (int.TryParse(input, out var qnty))
-        //    {
-        //        return qnty;
-        //    }
-        //    else
-        //    {
-        //        logger.Error($"Invalid input {input}");
-        //        return -1;
-        //    }
-        //}
+            if (int.TryParse(input, out var qnty))
+            {
+                return qnty;
+            }
+            else
+            {
+                logger.Error($"Invalid input {input}");
+                return -1;
+            }
+        }
     }
 }
 

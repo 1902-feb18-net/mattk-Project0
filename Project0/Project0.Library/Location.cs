@@ -63,6 +63,25 @@ namespace Project0.Library
         //    }
         //}
 
-        
+        //public static bool CheckCupcake(int storeLocationId, CupcakeNum cupcakeType, List<Order> orders)
+        //{
+        //    var ordersAtStore = orders.Where(o => o.OrderLocation == storeLocationId);
+        //    var ordersAtStoreRecently =
+        //        ordersAtStore.Where(o =>
+        //        Math.Abs(o.OrderTime.Subtract(DateTime.Now).TotalMinutes) < 1440);
+        //    var ordersAtStoreRecentlyWithCupcake =
+        //        ordersAtStoreRecently.Where(o => o.OrderItem.Item3 == cupcakeType);
+        //    int sum = ordersAtStoreRecentlyWithCupcake.Sum(o => o.OrderItem.Item2);
+
+        //    if (sum < 1000)
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
+
     }
 }

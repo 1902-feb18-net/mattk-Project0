@@ -31,7 +31,7 @@ namespace Project0
             {
                 var p0Repo = new Project0Repo(dbContext);
 
-                Console.WriteLine("Welcome to Luigi's Cupcakes Manager");
+                Console.WriteLine("Welcome to Matt's Cupcakes Manager");
                 Console.WriteLine();
                 Console.WriteLine("Please select from the following options (not case-sensitive):");
 
@@ -142,25 +142,27 @@ namespace Project0
                 logger.Error($"{customerId} is not in the list of customers.");
                 return;
             }
-           // Cupcake cupcakeTuple = ConsoleRead.GetCupcake(p0Repo);
-
-            //ConsoleRead.GetCupcake();
-            //if (cupcakeTuple.Item2 is null)
-            //{
-            //    return;
-            //}
-            //int orderQnty = ConsoleRead.GetCupcakeQuantity();
-            //if (orderQnty == -1)
-            //{
-            //    return;
-            //}
-            //bool qntyAllowed = Cupcake.CheckCupcakeQuantity(orderQnty);
-            //if (!qntyAllowed)
-            //{
-            //    Console.WriteLine("Maximum order quantity is 500.");
-            //    return;
-            //}
-            //bool cupcakeAllowed = Cupcake.CheckCupcake(storeLocationId, cupcakeTuple.Item1, orders);
+            int cupcakeId = ConsoleRead.GetCupcake(p0Repo);
+            if (customerId == -1)
+            {
+                return;
+            }
+            if (!p0Repo.CheckCupcakeExists(cupcakeId))
+            {
+                logger.Error($"{customerId} is not in the list of cupcakes.");
+                return;
+            }
+            int orderQnty = ConsoleRead.GetCupcakeQuantity();
+            if (orderQnty == -1)
+            {
+                return;
+            }
+            if (!Library.Order.CheckCupcakeQuantity(orderQnty))
+            {
+                Console.WriteLine("Maximum order quantity is 500.");
+                return;
+            }
+            //bool cupcakeAllowed = Location.CheckCupcakeExhaustion(storeLocationId, cupcake, orders);
             //if (!cupcakeAllowed)
             //{
             //    Console.WriteLine("This store has exhausted supply of that cupcake. Try back in 24 hours.");

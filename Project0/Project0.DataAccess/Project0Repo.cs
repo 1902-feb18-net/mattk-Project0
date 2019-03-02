@@ -61,6 +61,12 @@ namespace Project0.DataAccess
             return Mapper.Map(customers);
         }
 
+        public IEnumerable<Library.Cupcake> GetAllCupcakes()
+        {
+            IEnumerable<DataAccess.Cupcake> cupcakes = Context.Cupcake.ToList();
+            return Mapper.Map(cupcakes);
+        }
+
         public bool CheckLocationExists(int storeLocationId)
         {
             if (Context.Location.Any(l => l.LocationId == storeLocationId))
@@ -73,6 +79,15 @@ namespace Project0.DataAccess
         public bool CheckCustomerExists(int customerId)
         {
             if (Context.Customer.Any(l => l.CustomerId == customerId))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool CheckCupcakeExists(int cupcakeId)
+        {
+            if (Context.Cupcake.Any(l => l.CupcakeId == cupcakeId))
             {
                 return true;
             }
