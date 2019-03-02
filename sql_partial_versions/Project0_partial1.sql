@@ -21,3 +21,5 @@ CREATE TABLE Project0.Location (
 SELECT *
 FROM Project0.Location;
 
+SELECT *
+FROM Project0.Customer;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NLog;
+using Project0.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -128,77 +130,77 @@ namespace Project0
         //    }
         //}
 
-        //public static string GetCustomerFirstName()
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
+        public static string GetCustomerFirstName()
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    Console.WriteLine("Please enter a first name:");
-        //    var input = Console.ReadLine();
-        //    if (!String.IsNullOrEmpty(input))
-        //    {
-        //        return input;
-        //    }
-        //    else
-        //    {
-        //        logger.Error("Empty input for first name is invalid.");
-        //        return null;
-        //    }
-        //}
+            Console.WriteLine("Please enter a first name:");
+            var input = Console.ReadLine();
+            if (!String.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+            else
+            {
+                logger.Error("Empty input for first name is invalid.");
+                return null;
+            }
+        }
 
-        //public static string GetCustomerLastName()
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
+        public static string GetCustomerLastName()
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    Console.WriteLine("Please enter a last name:");
-        //    var input = Console.ReadLine();
-        //    if (!String.IsNullOrEmpty(input))
-        //    {
-        //        return input;
-        //    }
-        //    else
-        //    {
-        //        logger.Error("Empty input for last name is invalid.");
-        //        return null;
-        //    }
-        //}
+            Console.WriteLine("Please enter a last name:");
+            var input = Console.ReadLine();
+            if (!String.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+            else
+            {
+                logger.Error("Empty input for last name is invalid.");
+                return null;
+            }
+        }
 
-        //public static int GetStoreLocation(List<Location> storeLocations, string prompt)
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
+        public static int GetStoreLocation(Project0Repo p0Repo, string prompt)
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    ConsoleDisplay.StoreList(storeLocations);
-        //    Console.WriteLine(prompt);
-        //    var input = Console.ReadLine();
+            ConsoleDisplay.StoreList(p0Repo);
+            Console.WriteLine(prompt);
+            var input = Console.ReadLine();
 
-        //    if (int.TryParse(input, out var storeLocationId))
-        //    {
-        //        return storeLocationId;
-        //    }
-        //    else
-        //    {
-        //        logger.Error($"Invalid input {input}");
-        //        return -1;
-        //    }
-        //}
+            if (int.TryParse(input, out var storeLocationId))
+            {
+                return storeLocationId;
+            }
+            else
+            {
+                logger.Error($"Invalid input {input}");
+                return -1;
+            }
+        }
 
-        //public static int GetCustomer(List<Customer> customers)
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
+        public static int GetCustomer(Project0Repo p0Repo)
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    ConsoleDisplay.CustomerList(customers);
-        //    Console.WriteLine("Please enter a valid customer Id for the order:");
-        //    var input = Console.ReadLine();
+            ConsoleDisplay.CustomerList(p0Repo);
+            Console.WriteLine("Please enter a valid customer Id for the order:");
+            var input = Console.ReadLine();
 
-        //    if (int.TryParse(input, out var customerId))
-        //    {
-        //        return customerId;
-        //    }
-        //    else
-        //    {
-        //        logger.Error($"Invalid input {input}");
-        //        return -1;
-        //    }
-        //}
+            if (int.TryParse(input, out var customerId))
+            {
+                return customerId;
+            }
+            else
+            {
+                logger.Error($"Invalid input {input}");
+                return -1;
+            }
+        }
 
         //public static Cupcake GetCupcake()
         //{

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Project0.DataAccess;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Project0
@@ -23,28 +25,30 @@ namespace Project0
             Console.WriteLine("Please type a selection, or type 'q' to quit: ");
         }
 
-        //public static void StoreList(List<Location> storeLocations)
-        //{
-        //    Console.WriteLine("List of Available Store Locations:");
-        //    Console.WriteLine();
-        //    foreach (var item in storeLocations)
-        //    {
-        //        Console.WriteLine($"Store Id: {item.Id}");
-        //    }
-        //    Console.WriteLine();
-        //}
+        public static void StoreList(Project0Repo p0Repo)
+        {
+            Console.WriteLine("List of Available Store Locations:");
+            Console.WriteLine();
+            var locations = p0Repo.GetAllStoreLocations().ToList();
+            foreach (var item in locations)
+            {
+                Console.WriteLine($"Store Id: {item.Id}");
+            }
+            Console.WriteLine();
+        }
 
-        //public static void CustomerList(List<Customer> customers)
-        //{
-        //    Console.WriteLine("List of Customers:");
-        //    Console.WriteLine();
-        //    foreach (var item in customers)
-        //    {
-        //        Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
-        //            $"Last Name, {item.LastName}, Default Store Id: {item.DefaultStore}");
-        //    }
-        //    Console.WriteLine();
-        //}
+        public static void CustomerList(Project0Repo p0Repo)
+        {
+            Console.WriteLine("List of Customers:");
+            Console.WriteLine();
+            var customers = p0Repo.GetAllCustomers().ToList();
+            foreach (var item in customers)
+            {
+                Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
+                    $"Last Name, {item.LastName}, Default Store Id: {item.DefaultStore}");
+            }
+            Console.WriteLine();
+        }
 
         //public static void OrderList(List<Order> orders, List<Location> storeLocations)
         //{
@@ -123,20 +127,20 @@ namespace Project0
         //    Console.WriteLine();
         //}
 
-        //public static void CupcakeList()
-        //{
-        //    Console.WriteLine("List of Cupcakes:");
-        //    Console.WriteLine();
-        //    Console.WriteLine("Vanilla");
-        //    Console.WriteLine("Chocolate");
-        //    Console.WriteLine("ChocPeanutButter");
-        //    Console.WriteLine("RaspAmaretto");
-        //    Console.WriteLine("ChocPeppermint");
-        //    Console.WriteLine("MintOreo");
-        //    Console.WriteLine("Coconut");
-        //    Console.WriteLine("Lemon");
-        //    Console.WriteLine();
-        //}
+        public static void CupcakeList()
+        {
+            Console.WriteLine("List of Cupcakes:");
+            Console.WriteLine();
+            Console.WriteLine("Vanilla");
+            Console.WriteLine("Chocolate");
+            Console.WriteLine("ChocPeanutButter");
+            Console.WriteLine("RaspAmaretto");
+            Console.WriteLine("ChocPeppermint");
+            Console.WriteLine("MintOreo");
+            Console.WriteLine("Coconut");
+            Console.WriteLine("Lemon");
+            Console.WriteLine();
+        }
 
 
     }
