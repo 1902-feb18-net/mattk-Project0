@@ -12,7 +12,12 @@ namespace Project0.DataAccess
         int GetLastCustomerAdded();
         IEnumerable<Library.Location> GetAllStoreLocations();
         IEnumerable<Library.Customer> GetAllCustomers();
+        //IEnumerable<Library.Cupcake> GetAllCupcakes();
+
+        //Cupcake GetCupcake();
         bool CheckLocationExists(int storeLocationId);
+        bool CheckCustomerExists(int storeLocationId);
+
         //IEnumerable<Movie> GetAllMovies();
         //IEnumerable<Movie> GetAllGenres();
         //Movie GetMovieById(int id);

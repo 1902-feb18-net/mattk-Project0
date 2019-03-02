@@ -9,7 +9,7 @@ namespace Project0.Library
         public int OrderLocation { get; set; }
         public int OrderCustomer { get; set; }
         public DateTime OrderTime { get; set; }
-        public (Cupcake, int, CupcakeNum) OrderItem { get; set; } // tuple is (Cupcake, qnty, type)
+        //public (Cupcake, int, CupcakeNum) OrderItem { get; set; } // tuple is (Cupcake, qnty, type)
 
     }
 }

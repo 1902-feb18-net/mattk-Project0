@@ -69,5 +69,14 @@ namespace Project0.DataAccess
             }
             return false;            
         }
+
+        public bool CheckCustomerExists(int customerId)
+        {
+            if (Context.Customer.Any(l => l.CustomerId == customerId))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

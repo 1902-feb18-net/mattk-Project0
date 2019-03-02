@@ -202,28 +202,25 @@ namespace Project0
             }
         }
 
-        //public static Cupcake GetCupcake()
+        //public static Cupcake GetCupcake(Project0Repo p0Repo)
         //{
         //    ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    ConsoleDisplay.CupcakeList();
+        //    ConsoleDisplay.CupcakeList(p0Repo);
         //    Console.WriteLine("Please enter the name of a cupcake as it appears on the list:");
         //    var input = Console.ReadLine();
 
-        //    try
-        //    {
-        //        if ()
+        //    //if (p0Repo.CheckCupcakeExists())
 
+                
 
-        //            CupcakeNum cupcakeType = (CupcakeNum)Enum.Parse(typeof(CupcakeNum), input);
-        //        Cupcake lookupCupcake = Cupcake.FindCupcake(cupcakeType);
-        //        return (cupcakeType, lookupCupcake);
-        //    }
-        //    catch (SystemException ex)
-        //    {
-        //        logger.Error(ex);
-        //        return null;
-        //    }
+        //    //        CupcakeNum cupcakeType = (CupcakeNum)Enum.Parse(typeof(CupcakeNum), input);
+        //    //    Cupcake lookupCupcake = Cupcake.FindCupcake(cupcakeType);
+        //    //    return (cupcakeType, lookupCupcake);
+            
+        //    //    logger.Error(ex);
+        //    //    return null;
+        //    //}
         //}
 
         //public static int GetCupcakeQuantity()

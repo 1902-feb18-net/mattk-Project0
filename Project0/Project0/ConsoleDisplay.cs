@@ -127,10 +127,12 @@ namespace Project0
         //    Console.WriteLine();
         //}
 
-        public static void CupcakeList()
+        public static void CupcakeList(Project0Repo p0Repo)
         {
             Console.WriteLine("List of Cupcakes:");
             Console.WriteLine();
+
+
             Console.WriteLine("Vanilla");
             Console.WriteLine("Chocolate");
             Console.WriteLine("ChocPeanutButter");

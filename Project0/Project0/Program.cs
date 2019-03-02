@@ -133,58 +133,57 @@ namespace Project0
                 return;
             }
             int customerId = ConsoleRead.GetCustomer(p0Repo);
-
-            int customerId = ConsoleRead.GetCustomer(customers);
             if (customerId == -1)
             {
                 return;
             }
-            bool customerExists = Customer.CheckCustomerExists(customerId, customers);
-            if (!customerExists)
+            if (!p0Repo.CheckCustomerExists(customerId))
             {
                 logger.Error($"{customerId} is not in the list of customers.");
                 return;
             }
-            Cupcake cupcakeTuple = ConsoleRead.GetCupcake();
-            if (cupcakeTuple.Item2 is null)
-            {
-                return;
-            }
-            int orderQnty = ConsoleRead.GetCupcakeQuantity();
-            if (orderQnty == -1)
-            {
-                return;
-            }
-            bool qntyAllowed = Cupcake.CheckCupcakeQuantity(orderQnty);
-            if (!qntyAllowed)
-            {
-                Console.WriteLine("Maximum order quantity is 500.");
-                return;
-            }
-            bool cupcakeAllowed = Cupcake.CheckCupcake(storeLocationId, cupcakeTuple.Item1, orders);
-            if (!cupcakeAllowed)
-            {
-                Console.WriteLine("This store has exhausted supply of that cupcake. Try back in 24 hours.");
-                return;
-            }
-            bool orderFeasible = Order.CheckOrderFeasible(storeLocationId, storeLocations,
-                cupcakeTuple.Item2, orderQnty);
-            if (!orderFeasible)
-            {
-                Console.WriteLine("This store does not have enough ingredients to place the requested order.");
-                return;
-            }
-            bool customerCanOrder = Order.CheckCustomerCanOrder(customerId,
-                storeLocationId, customers);
-            if (!customerCanOrder)
-            {
-                Console.WriteLine("Customer can't place an order at this store because it hasn't been 2 hours yet.");
-                return;
-            }
+           // Cupcake cupcakeTuple = ConsoleRead.GetCupcake(p0Repo);
 
-            int newOrderId = Order.AddOrder(storeLocationId, customerId, cupcakeTuple.Item1, cupcakeTuple.Item2, orderQnty,
-                jsonLocations, jsonCustomers, jsonOrders, customers, storeLocations, orders);
-            Console.WriteLine($"Order with id of {newOrderId} successfully created!");
+            //ConsoleRead.GetCupcake();
+            //if (cupcakeTuple.Item2 is null)
+            //{
+            //    return;
+            //}
+            //int orderQnty = ConsoleRead.GetCupcakeQuantity();
+            //if (orderQnty == -1)
+            //{
+            //    return;
+            //}
+            //bool qntyAllowed = Cupcake.CheckCupcakeQuantity(orderQnty);
+            //if (!qntyAllowed)
+            //{
+            //    Console.WriteLine("Maximum order quantity is 500.");
+            //    return;
+            //}
+            //bool cupcakeAllowed = Cupcake.CheckCupcake(storeLocationId, cupcakeTuple.Item1, orders);
+            //if (!cupcakeAllowed)
+            //{
+            //    Console.WriteLine("This store has exhausted supply of that cupcake. Try back in 24 hours.");
+            //    return;
+            //}
+            //bool orderFeasible = Order.CheckOrderFeasible(storeLocationId, storeLocations,
+            //    cupcakeTuple.Item2, orderQnty);
+            //if (!orderFeasible)
+            //{
+            //    Console.WriteLine("This store does not have enough ingredients to place the requested order.");
+            //    return;
+            //}
+            //bool customerCanOrder = Order.CheckCustomerCanOrder(customerId,
+            //    storeLocationId, customers);
+            //if (!customerCanOrder)
+            //{
+            //    Console.WriteLine("Customer can't place an order at this store because it hasn't been 2 hours yet.");
+            //    return;
+            //}
+
+            //int newOrderId = Order.AddOrder(storeLocationId, customerId, cupcakeTuple.Item1, cupcakeTuple.Item2, orderQnty,
+            //    jsonLocations, jsonCustomers, jsonOrders, customers, storeLocations, orders);
+            //Console.WriteLine($"Order with id of {newOrderId} successfully created!");
         }
     }
 }
