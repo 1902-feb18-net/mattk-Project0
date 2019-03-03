@@ -26,6 +26,40 @@ CREATE TABLE Project0.RecipeItem (
 	CONSTRAINT FK_Recipe_Ingredient FOREIGN KEY (IngredientID) REFERENCES Project0.Ingredient (IngredientId)
 );
 
+CREATE TABLE Project0.Location (
+	LocationId INT NOT NULL PRIMARY KEY IDENTITY
+);
+
+CREATE TABLE Project0.LocationInventory (
+	LocationInventoryId INT NOT NULL PRIMARY KEY IDENTITY,
+	LocationID INT NOT NULL,
+	IngredientID INT NOT NULL,
+	Amount DECIMAL(10,6) NOT NULL,
+	CONSTRAINT InventoryIngredient UNIQUE (LocationID, IngredientID),
+	CONSTRAINT FK_Location FOREIGN KEY (LocationID) REFERENCES Project0.Location (LocationId),
+	CONSTRAINT FK_Ingredient FOREIGN KEY (IngredientID) REFERENCES Project0.Ingredient (IngredientId)
+);
+
+CREATE TABLE Project0.Customer (
+	CustomerId INT NOT NULL PRIMARY KEY IDENTITY,
+	FirstName NVARCHAR(100) NOT NULL,
+	LastName NVARCHAR(100) NOT NULL,
+	DefaultLocation INT NOT NULL,
+	CONSTRAINT FK_Default_Location FOREIGN KEY (DefaultLocation) REFERENCES Project0.Location (LocationId)
+);
+
+CREATE TABLE Project0.CupcakeOrder (
+	OrderId INT NOT NULL PRIMARY KEY IDENTITY,
+	LocationID INT NOT NULL,
+	CustomerID INT NOT NULL,
+	CupcakeID INT NOT NULL,
+	Quantity INT NOT NULL,
+	OrderTime DATETIME2 NOT NULL,
+	CONSTRAINT FK_Order_Location FOREIGN KEY (LocationID) REFERENCES Project0.Location (LocationId),
+	CONSTRAINT FK_Order_Customer FOREIGN KEY (CustomerID) REFERENCES Project0.Customer (CustomerId),
+	CONSTRAINT FK_Order_Cupcake FOREIGN KEY (CupcakeID) REFERENCES Project0.Cupcake (CupcakeId)
+);
+
 INSERT INTO Project0.Cupcake (Type, Cost) VALUES
 	('Vanilla', 3.5),
 	('Chocolate', 5.25),
@@ -55,12 +89,6 @@ INSERT INTO Project0.Ingredient (Type, Units) VALUES
 	('CoconutMilk', 'gallons'),
 	('Lemon', 'each'),
 	('Amaretto', 'lbs');
-	
-SELECT *
-FROM Project0.Cupcake;
-
-SELECT *
-FROM Project0.Ingredient;
 
 INSERT INTO Project0.RecipeItem 
 (CupcakeID, IngredientID, Amount) VALUES
@@ -246,41 +274,6 @@ INSERT INTO Project0.RecipeItem
 	(8, 16, 0),
 	(8, 17, 0.15),
 	(8, 18, 0);
-	
-SELECT *
-FROM Project0.RecipeItem;
 
-CREATE TABLE Project0.Location (
-	LocationId INT NOT NULL PRIMARY KEY IDENTITY
-);
 
-CREATE TABLE Project0.LocationInventory (
-	LocationInventoryId INT NOT NULL PRIMARY KEY IDENTITY,
-	LocationID INT NOT NULL,
-	IngredientID INT NOT NULL,
-	Amount DECIMAL(10,6) NOT NULL,
-	CONSTRAINT InventoryIngredient UNIQUE (LocationID, IngredientID),
-	CONSTRAINT FK_Location FOREIGN KEY (LocationID) REFERENCES Project0.Location (LocationId),
-	CONSTRAINT FK_Ingredient FOREIGN KEY (IngredientID) REFERENCES Project0.Ingredient (IngredientId)
-);
-
-CREATE TABLE Project0.Customer (
-	CustomerId INT NOT NULL PRIMARY KEY IDENTITY,
-	FirstName NVARCHAR(100) NOT NULL,
-	LastName NVARCHAR(100) NOT NULL,
-	DefaultStore INT NOT NULL,
-	CONSTRAINT FK_Default_Location FOREIGN KEY (DefaultStore) REFERENCES Project0.Location (LocationId)
-);
-
-CREATE TABLE Project0.CupcakeOrder (
-	OrderId INT NOT NULL PRIMARY KEY IDENTITY,
-	LocationID INT NOT NULL,
-	CustomerID INT NOT NULL,
-	CupcakeID INT NOT NULL,
-	Quantity INT NOT NULL,
-	OrderTime DATETIME2 NOT NULL,
-	CONSTRAINT FK_Order_Location FOREIGN KEY (LocationID) REFERENCES Project0.Location (LocationId),
-	CONSTRAINT FK_Order_Customer FOREIGN KEY (CustomerID) REFERENCES Project0.Customer (CustomerId),
-	CONSTRAINT FK_Order_Cupcake FOREIGN KEY (CupcakeID) REFERENCES Project0.Cupcake (CupcakeId)
-);
 

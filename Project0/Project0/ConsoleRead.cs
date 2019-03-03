@@ -60,7 +60,7 @@ namespace Project0
                     foreach (var item in possibleMatches)
                     {
                         Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
-                        $"Last Name, {item.LastName}, Default Store Id: {item.DefaultStore}");
+                        $"Last Name, {item.LastName}, Default Store Id: {item.DefaultLocation}");
                     }
                 }
                 else

@@ -46,7 +46,7 @@ namespace Project0
             foreach (var item in customers)
             {
                 Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
-                    $"Last Name, {item.LastName}, Default Location Id: {item.DefaultStore}");
+                    $"Last Name, {item.LastName}, Default Location Id: {item.DefaultLocation}");
             }
             Console.WriteLine();
         }

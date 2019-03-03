@@ -27,14 +27,14 @@ namespace Project0.DataAccess
             Id = customer.CustomerId,
             FirstName = customer.FirstName,
             LastName = customer.LastName,
-            DefaultStore = customer.DefaultStore
+            DefaultLocation = customer.DefaultLocation
         };
         public static DataAccess.Customer Map(Library.Customer customer) => new DataAccess.Customer
         {
             CustomerId = customer.Id,
             FirstName = customer.FirstName,
             LastName = customer.LastName,
-            DefaultStore = customer.DefaultStore
+            DefaultLocation = customer.DefaultLocation
         };
         public static IEnumerable<Library.Customer> Map(IEnumerable<DataAccess.Customer> customers) =>
             customers.Select(Map);

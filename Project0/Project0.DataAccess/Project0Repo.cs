@@ -39,7 +39,7 @@ namespace Project0.DataAccess
             {
                 FirstName = fName,
                 LastName = lName,
-                DefaultStore = locationId
+                DefaultLocation = locationId
             };
             Context.Customer.Add(newCustomer);
             Context.SaveChanges();

@@ -32,7 +32,7 @@ namespace Project0.DataAccess
                 entity.ToTable("Cupcake", "Project0");
 
                 entity.HasIndex(e => e.Type)
-                    .HasName("UQ__Cupcake__F9B8A48BC6A492BD")
+                    .HasName("UQ__Cupcake__F9B8A48B93D23CB3")
                     .IsUnique();
 
                 entity.Property(e => e.Cost)
@@ -47,7 +47,7 @@ namespace Project0.DataAccess
             modelBuilder.Entity<CupcakeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__CupcakeO__C3905BCF9B3BF79C");
+                    .HasName("PK__CupcakeO__C3905BCF46DCC657");
 
                 entity.ToTable("CupcakeOrder", "Project0");
 
@@ -88,9 +88,9 @@ namespace Project0.DataAccess
                     .IsRequired()
                     .HasMaxLength(100);
 
-                entity.HasOne(d => d.DefaultStoreNavigation)
+                entity.HasOne(d => d.DefaultLocationNavigation)
                     .WithMany(p => p.Customer)
-                    .HasForeignKey(d => d.DefaultStore)
+                    .HasForeignKey(d => d.DefaultLocation)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Default_Location");
             });
@@ -100,7 +100,7 @@ namespace Project0.DataAccess
                 entity.ToTable("Ingredient", "Project0");
 
                 entity.HasIndex(e => e.Type)
-                    .HasName("UQ__Ingredie__F9B8A48BF05ABBF9")
+                    .HasName("UQ__Ingredie__F9B8A48BE7B0561E")
                     .IsUnique();
 
                 entity.Property(e => e.Type)
