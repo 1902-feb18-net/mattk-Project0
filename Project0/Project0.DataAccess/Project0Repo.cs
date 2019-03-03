@@ -133,6 +133,13 @@ namespace Project0.DataAccess
             return Mapper.Map(orders);
         }
 
+        public IEnumerable<Library.Order> GetLocationOrderHistory(int storeLocationId)
+        {
+            IEnumerable<DataAccess.CupcakeOrder> locationOrderHistory = 
+                    Context.CupcakeOrder.Where(co => co.LocationId == storeLocationId).ToList();
+            return Mapper.Map(locationOrderHistory);
+        }
+
         public bool CheckLocationExists(int storeLocationId)
         {
             if (Context.Location.Any(l => l.LocationId == storeLocationId))

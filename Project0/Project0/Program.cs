@@ -51,13 +51,13 @@ namespace Project0
                     {
                         GetDataAndAddOrder(p0Repo);
                     }
-                    else if (input == "SL")
+                    else if (input == "LL")
                     {
-                        //ConsoleDisplay.StoreList(storeLocations);
+                        ConsoleDisplay.LocationList(p0Repo);
                     }
-                    else if (input == "SO")
+                    else if (input == "LO")
                     {
-                        //ConsoleRead.StoreOrders(storeLocations);
+                        ConsoleRead.LocationOrders(p0Repo);
                     }
                     else if (input == "CL")
                     {
@@ -176,7 +176,7 @@ namespace Project0
                 Console.WriteLine("This store does not have enough ingredients to place the requested order.");
                 return;
             }
-            if (!Library.Customer.CheckCustomerCanOrder(customerId, storeLocationId, orders))
+            if (Library.Customer.CheckCustomerCanOrder(customerId, storeLocationId, orders))
             {
                 Console.WriteLine("Customer can't place an order at this store because it hasn't been 2 hours \n" +
                     "since there last order yet.");

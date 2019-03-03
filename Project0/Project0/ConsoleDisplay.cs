@@ -1,4 +1,5 @@
-﻿using Project0.DataAccess;
+﻿using MoreLinq;
+using Project0.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace Project0
             Console.WriteLine("'S': Add a store location to the database.");
             Console.WriteLine("'C': Add a customer to the database.");
             Console.WriteLine("'O': Add an order to the database.");
-            Console.WriteLine("'SL': Get a list of available stores and their id numbers.");
-            Console.WriteLine("'SO': Get a store's order history.");
+            Console.WriteLine("'LL': Get a list of available stores and their id numbers.");
+            Console.WriteLine("'LO': Get a store's order history.");
             Console.WriteLine("'CL': Get a list of available customers and their information.");
             Console.WriteLine("'CS': Search for customers by name.");
             Console.WriteLine("'CO': Get a customer's order history.");
@@ -25,7 +26,7 @@ namespace Project0
             Console.WriteLine("Please type a selection, or type 'q' to quit: ");
         }
 
-        public static void StoreList(Project0Repo p0Repo)
+        public static void LocationList(Project0Repo p0Repo)
         {
             Console.WriteLine("List of Available Store Locations:");
             Console.WriteLine();
@@ -50,82 +51,88 @@ namespace Project0
             Console.WriteLine();
         }
 
-        //public static void OrderList(List<Order> orders, List<Location> storeLocations)
-        //{
-        //    Console.WriteLine();
-        //    Console.WriteLine("Please select from the following filters ('n' for no filter)");
-        //    Console.WriteLine("'E': Earliest orders first");
-        //    Console.WriteLine("'L': Latest orders first");
-        //    Console.WriteLine("'C': Cheapest orders first");
-        //    Console.WriteLine("'X': Most expensive orders first");
-        //    Console.WriteLine();
-        //    Console.WriteLine("Please type a selection to see a list of orders: ");
-        //    ConsoleRead.GetMenuInput(out var input);
-        //    List<Order> modOrders = new List<Order>();
+        public static void OrderList(Project0Repo p0Repo, List<Library.Order> orders, 
+            List<Library.Cupcake> cupcakes, List<Location> storeLocations)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Please select from the following filters ('n' for no filter)");
+            Console.WriteLine("'E': Earliest orders first");
+            Console.WriteLine("'L': Latest orders first");
+            Console.WriteLine("'C': Cheapest orders first");
+            Console.WriteLine("'X': Most expensive orders first");
+            Console.WriteLine();
+            Console.WriteLine("Please type a selection to see a list of orders: ");
+            ConsoleRead.GetMenuInput(out var input);
+            List<Library.Order> modOrders = new List<Library.Order>();
 
-        //    if (input == "E")
-        //    {
-        //        foreach (var item in orders.OrderBy(o => o.OrderTime))
-        //        {
-        //            modOrders.Add(item);
-        //        }
-        //        DisplayOrders(modOrders, storeLocations, "List of Orders (earliest to latest):");
-        //    }
-        //    else if (input == "L")
-        //    {
-        //        foreach (var item in orders.OrderByDescending(o => o.OrderTime))
-        //        {
-        //            modOrders.Add(item);
-        //        }
-        //        DisplayOrders(modOrders, storeLocations, "List of Orders (latest to earliest):");
-        //    }
-        //    else if (input == "C")
-        //    {
-        //        foreach (var item in orders.OrderBy(o => (o.OrderItem.Item2 * o.OrderItem.Item1.Cost)))
-        //        {
-        //            modOrders.Add(item);
-        //        }
-        //        DisplayOrders(modOrders, storeLocations, "List of Orders (cheapest to most expensive):");
-        //    }
-        //    else if (input == "X")
-        //    {
-        //        foreach (var item in orders.OrderByDescending(o => (o.OrderItem.Item2 * o.OrderItem.Item1.Cost)))
-        //        {
-        //            modOrders.Add(item);
-        //        }
-        //        DisplayOrders(modOrders, storeLocations, "List of Orders (most expensive to cheapest):");
-        //    }
-        //    else
-        //    {
-        //        DisplayOrders(orders, storeLocations, "List of Orders:");
-        //    }
-        //}
+            if (input == "E")
+            {
+                foreach (var item in orders.OrderBy(o => o.OrderTime))
+                {
+                    modOrders.Add(item);
+                }
+                DisplayOrders(p0Repo, modOrders, cupcakes, storeLocations, "List of Orders (earliest to latest):");
+            }
+            else if (input == "L")
+            {
+                foreach (var item in orders.OrderByDescending(o => o.OrderTime))
+                {
+                    modOrders.Add(item);
+                }
+                DisplayOrders(p0Repo, modOrders, cupcakes, storeLocations, "List of Orders (latest to earliest):");
+            }
+            else if (input == "C")
+            {
+                foreach (var item in orders.OrderBy(o => 
+                        (o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)))
+                {
+                    modOrders.Add(item);
+                }
+                DisplayOrders(p0Repo, modOrders, cupcakes, storeLocations, "List of Orders (cheapest to most expensive):");
+            }
+            else if (input == "X")
+            {
+                foreach (var item in orders.OrderByDescending(o =>
+                        (o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)))
+                {
+                    modOrders.Add(item);
+                }
+                DisplayOrders(p0Repo, modOrders, cupcakes, storeLocations, "List of Orders (most expensive to cheapest):");
+            }
+            else
+            {
+                DisplayOrders(p0Repo, orders, cupcakes, storeLocations, "List of Orders:");
+            }
+        }
 
-        //public static void DisplayOrders(List<Order> orders, List<Location> storeLocations, string prompt)
-        //{
-        //    Console.WriteLine(prompt);
-        //    Console.WriteLine();
-        //    foreach (var item in orders)
-        //    {
-        //        Console.WriteLine($"Order Id: {item.Id}, Location Id: {item.OrderLocation}, " +
-        //            $"Customer Id, {item.OrderCustomer}, Order Time: {item.OrderTime}, " +
-        //            $"Order Item: {item.OrderItem.Item1}, qnty: {item.OrderItem.Item2}");
-        //        Console.WriteLine($"Order Id {item.Id} total cost: " +
-        //            $"${item.OrderItem.Item2 * item.OrderItem.Item1.Cost}");
-        //    }
-        //    Console.WriteLine();
-        //    Console.WriteLine("Other order statistics...:");
-        //    Console.WriteLine($"Average Order Cost: " +
-        //        $"{orders.Average(o => o.OrderItem.Item2 * o.OrderItem.Item1.Cost)}");
-        //    Console.WriteLine($"Order with the latest date: " +
-        //        $"{orders.Max(o => o.OrderTime)}");
-        //    if (!(storeLocations is null))
-        //    {
-        //        var storeWithMostOrders = storeLocations.MaxBy(sL => sL.OrderHistory.Count()).First();
-        //        Console.WriteLine($"Store Id with the most orders: {storeWithMostOrders.Id}");
-        //    }
-        //    Console.WriteLine();
-        //}
+        public static void DisplayOrders(Project0Repo p0Repo, List<Library.Order> orders,
+            List<Library.Cupcake> cupcakes, List<Location> storeLocations, string prompt)
+        {
+            Console.WriteLine(prompt);
+            Console.WriteLine();
+            foreach (var item in orders)
+            {
+                Console.WriteLine($"Order Id: {item.Id}, Location Id: {item.OrderLocation}, " +
+                    $"Customer Id, {item.OrderCustomer}, Order Time: {item.OrderTime}, " +
+                    $"Order Item: {cupcakes.Single(c => c.Id == item.OrderCupcake).Type}, " +
+                    $"qnty: {item.OrderQuantity}");
+                Console.WriteLine($"Order Id {item.Id} total cost: " +
+                    $"${item.OrderQuantity * cupcakes.Single(c => c.Id == item.OrderCupcake).Cost}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Other order statistics...:");
+            Console.WriteLine($"Average Order Cost: " +
+                $"{orders.Average(o => o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)}");
+            Console.WriteLine($"Order with the latest date: " +
+                $"{orders.Max(o => o.OrderTime)}");
+            if (!(storeLocations is null))
+            {
+                var storeWithMostOrders = storeLocations.MaxBy(sL => 
+                p0Repo.GetLocationOrderHistory(sL.LocationId).Count()).First();
+                Console.WriteLine($"Store Id with the most orders: {storeWithMostOrders.LocationId}");
+            }
+            Console.WriteLine();
+        }
 
         public static void CupcakeList(Project0Repo p0Repo)
         {

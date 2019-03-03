@@ -2,6 +2,7 @@
 using Project0.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Project0
@@ -13,21 +14,20 @@ namespace Project0
             input = Console.ReadLine().ToUpper();
         }
 
-        //public static void StoreOrders(List<Location> storeLocations)
-        //{
-        //    int storeLocationId = GetStoreLocation(storeLocations,
-        //        "Please enter the store id to get that store's orders:");
-        //    if (storeLocationId == -1)
-        //    {
-        //        return;
-        //    }
+        public static void LocationOrders(Project0Repo p0Repo)
+        {
+            int storeLocationId = GetStoreLocation(p0Repo,
+                "Please enter the store id to get that store's orders:");
+            if (storeLocationId == -1)
+            {
+                return;
+            }
 
-        //    foreach (var item in storeLocations.Where(sL => sL.Id == storeLocationId))
-        //    {
-        //        Console.WriteLine($"Store Location {storeLocationId}");
-        //        ConsoleDisplay.OrderList(item.OrderHistory, null);
-        //    }
-        //}
+            var cupcakes = p0Repo.GetAllCupcakes().ToList();
+            var locationOrderHistory = p0Repo.GetLocationOrderHistory(storeLocationId).ToList();
+            Console.WriteLine($"Store Location {storeLocationId}");
+            ConsoleDisplay.OrderList(p0Repo, locationOrderHistory, cupcakes, null);
+        }
 
         //public static void CustomerSearch(List<Customer> customers)
         //{
@@ -168,7 +168,7 @@ namespace Project0
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
-            ConsoleDisplay.StoreList(p0Repo);
+            ConsoleDisplay.LocationList(p0Repo);
             Console.WriteLine(prompt);
             var input = Console.ReadLine();
 

@@ -19,17 +19,10 @@ namespace Project0.DataAccess
         IEnumerable<Library.Customer> GetAllCustomers();
         IEnumerable<Library.Cupcake> GetAllCupcakes();
         IEnumerable<Library.Order> GetAllOrders();
+        IEnumerable<Library.Order> GetLocationOrderHistory(int storeLocationId);
         bool CheckLocationExists(int storeLocationId);
         bool CheckCustomerExists(int customerId);
         bool CheckCupcakeExists(int cupcakeId);
         void UpdateLocationInv(int storeLocationId, Dictionary<int, decimal> recipe, int qnty);
-        
-        //IEnumerable<Movie> GetAllMovies();
-        //IEnumerable<Movie> GetAllGenres();
-        //Movie GetMovieById(int id);
-        //IEnumerable<Movie> GetMoviesByGenre(Genre genre);
-        //void AddMovie(Movie movie);
-        //void UpdateMovie(Movie movie);
-        //void DeleteMovie(Movie movie);
     }
 }
