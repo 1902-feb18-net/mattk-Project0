@@ -29,48 +29,50 @@ namespace Project0
             ConsoleDisplay.OrderList(p0Repo, locationOrderHistory, cupcakes, null);
         }
 
-        //public static void CustomerSearch(List<Customer> customers)
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
+        public static void CustomerSearch(Project0Repo p0Repo)
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    string fName = GetCustomerFirstName();
-        //    if (fName is null) { return; }
+            string fName = GetCustomerFirstName();
+            if (fName is null) { return; }
 
-        //    var numPossibleMatches = customers.Count(c => c.FirstName == fName);
-        //    if (numPossibleMatches > 0)
-        //    {
-        //        Console.WriteLine($"Found {numPossibleMatches} with that first name.");
-        //        var possibleMatches = customers.Where(c => c.FirstName == fName);
-        //        List<Customer> customerList = new List<Customer>();
-        //        foreach (var item in possibleMatches)
-        //        {
-        //            customerList.Add(item);
-        //        }
+            List<Library.Customer> customers = p0Repo.GetAllCustomers().ToList();
 
-        //        string lName = GetCustomerLastName();
-        //        if (lName is null) { return; }
+            var numPossibleMatches = customers.Count(c => c.FirstName == fName);
+            if (numPossibleMatches > 0)
+            {
+                Console.WriteLine($"Found {numPossibleMatches} with that first name.");
+                var possibleMatches = customers.Where(c => c.FirstName == fName);
+                List<Library.Customer> customerList = new List<Library.Customer>();
+                foreach (var item in possibleMatches)
+                {
+                    customerList.Add(item);
+                }
 
-        //        numPossibleMatches = customerList.Count(c => c.LastName == lName);
-        //        if (numPossibleMatches > 0)
-        //        {
-        //            possibleMatches = customerList.Where(c => c.LastName == lName);
-        //            Console.WriteLine("List of customer's with that first name and last name:");
-        //            foreach (var item in possibleMatches)
-        //            {
-        //                Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
-        //                $"Last Name, {item.LastName}, Default Store Id: {item.DefaultStore}");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("There is no one in the system with that first name and last name.");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("There is no one in the system with that first name.");
-        //    }
-        //}
+                string lName = GetCustomerLastName();
+                if (lName is null) { return; }
+
+                numPossibleMatches = customerList.Count(c => c.LastName == lName);
+                if (numPossibleMatches > 0)
+                {
+                    possibleMatches = customerList.Where(c => c.LastName == lName);
+                    Console.WriteLine("List of customer's with that first name and last name:");
+                    foreach (var item in possibleMatches)
+                    {
+                        Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
+                        $"Last Name, {item.LastName}, Default Store Id: {item.DefaultStore}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("There is no one in the system with that first name and last name.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("There is no one in the system with that first name.");
+            }
+        }
 
         //public static void CustomerOrders(List<Customer> customers)
         //{

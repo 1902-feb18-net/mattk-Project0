@@ -65,7 +65,7 @@ namespace Project0
                     }
                     else if (input == "CS")
                     {
-                        //ConsoleRead.CustomerSearch(customers);
+                        ConsoleRead.CustomerSearch(p0Repo);
                     }
                     else if (input == "CO")
                     {
