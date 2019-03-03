@@ -31,13 +31,8 @@ namespace Project0.DataAccess
                 locationInv.IngredientId = item.IngredientId;
                 locationInv.LocationId = storeLocationId;
                 locationInv.Amount = 500;
-                //locationInv.Units = 
-
+                Context.LocationInventory.Add(locationInv);
             }
-
-
-            var newLocation = new Location();
-            Context.Location.Add(newLocation);
             Context.SaveChanges();
         }
 
