@@ -21,6 +21,26 @@ namespace Project0.DataAccess
             Context.SaveChanges();
         }
 
+        public void FillLocationInventory(int storeLocationId)
+        {
+            var ingredients = Context.Ingredient.ToList();
+            var recipeItems = Context.RecipeItem.ToList();
+            foreach (var item in ingredients)
+            {
+                var locationInv = new LocationInventory();
+                locationInv.IngredientId = item.IngredientId;
+                locationInv.LocationId = storeLocationId;
+                locationInv.Amount = 500;
+                //locationInv.Units = 
+
+            }
+
+
+            var newLocation = new Location();
+            Context.Location.Add(newLocation);
+            Context.SaveChanges();
+        }
+
         public void AddCustomer(string fName, string lName, int storeLocationId)
         {
             var newCustomer = new Customer

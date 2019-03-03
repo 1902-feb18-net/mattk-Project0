@@ -91,6 +91,7 @@ namespace Project0
         {
             p0Repo.AddStoreLocation();
             int newLocationId = p0Repo.GetLastLocationAdded();
+            p0Repo.FillLocationInventory(newLocationId);
             Console.WriteLine($"Location with id of {newLocationId} successfully created!");
         }
 

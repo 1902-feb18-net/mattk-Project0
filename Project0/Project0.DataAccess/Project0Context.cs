@@ -23,6 +23,15 @@ namespace Project0.DataAccess
         public virtual DbSet<LocationInventory> LocationInventory { get; set; }
         public virtual DbSet<RecipeItem> RecipeItem { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:kagel1902sql.database.windows.net,1433;Initial Catalog=Project0;Persist Security Info=False;User ID=mpkagel;Password=#7As8*uK;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
@@ -32,7 +41,7 @@ namespace Project0.DataAccess
                 entity.ToTable("Cupcake", "Project0");
 
                 entity.HasIndex(e => e.Type)
-                    .HasName("UQ__Cupcake__F9B8A48BEFFD362F")
+                    .HasName("UQ__Cupcake__F9B8A48BC6A492BD")
                     .IsUnique();
 
                 entity.Property(e => e.Cost)
@@ -47,7 +56,7 @@ namespace Project0.DataAccess
             modelBuilder.Entity<CupcakeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__CupcakeO__C3905BCFAA555686");
+                    .HasName("PK__CupcakeO__C3905BCF9B3BF79C");
 
                 entity.ToTable("CupcakeOrder", "Project0");
 
@@ -99,9 +108,17 @@ namespace Project0.DataAccess
             {
                 entity.ToTable("Ingredient", "Project0");
 
+                entity.HasIndex(e => e.Type)
+                    .HasName("UQ__Ingredie__F9B8A48BF05ABBF9")
+                    .IsUnique();
+
                 entity.Property(e => e.Type)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.Units)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -122,10 +139,6 @@ namespace Project0.DataAccess
                 entity.Property(e => e.IngredientId).HasColumnName("IngredientID");
 
                 entity.Property(e => e.LocationId).HasColumnName("LocationID");
-
-                entity.Property(e => e.Units)
-                    .IsRequired()
-                    .HasMaxLength(50);
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.LocationInventory)
@@ -153,10 +166,6 @@ namespace Project0.DataAccess
                 entity.Property(e => e.CupcakeId).HasColumnName("CupcakeID");
 
                 entity.Property(e => e.IngredientId).HasColumnName("IngredientID");
-
-                entity.Property(e => e.Units)
-                    .IsRequired()
-                    .HasMaxLength(50);
 
                 entity.HasOne(d => d.Cupcake)
                     .WithMany(p => p.RecipeItem)

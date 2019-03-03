@@ -7,6 +7,7 @@ namespace Project0.DataAccess
     public interface IProject0Repo
     {
         void AddStoreLocation();
+        void FillLocationInventory(int storeLocationId);
         void AddCustomer(string fName, string lName, int storeLocationId);
         int GetLastLocationAdded();
         int GetLastCustomerAdded();
@@ -16,7 +17,7 @@ namespace Project0.DataAccess
         bool CheckLocationExists(int storeLocationId);
         bool CheckCustomerExists(int customerId);
         bool CheckCupcakeExists(int cupcakeId);
-
+        
         //IEnumerable<Movie> GetAllMovies();
         //IEnumerable<Movie> GetAllGenres();
         //Movie GetMovieById(int id);

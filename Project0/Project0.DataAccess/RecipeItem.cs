@@ -9,7 +9,6 @@ namespace Project0.DataAccess
         public int CupcakeId { get; set; }
         public int IngredientId { get; set; }
         public decimal Amount { get; set; }
-        public string Units { get; set; }
 
         public virtual Cupcake Cupcake { get; set; }
         public virtual Ingredient Ingredient { get; set; }
