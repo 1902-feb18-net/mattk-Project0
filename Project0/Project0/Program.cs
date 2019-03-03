@@ -176,13 +176,12 @@ namespace Project0
                 Console.WriteLine("This store does not have enough ingredients to place the requested order.");
                 return;
             }
-            //bool customerCanOrder = Order.CheckCustomerCanOrder(customerId,
-            //    storeLocationId, customers);
-            //if (!customerCanOrder)
-            //{
-            //    Console.WriteLine("Customer can't place an order at this store because it hasn't been 2 hours yet.");
-            //    return;
-            //}
+            if (!Library.Customer.CheckCustomerCanOrder(customerId, storeLocationId, orders))
+            {
+                Console.WriteLine("Customer can't place an order at this store because it hasn't been 2 hours \n" +
+                    "since there last order yet.");
+                return;
+            }
 
             p0Repo.AddCupcakeOrder(storeLocationId, customerId, cupcakeId, orderQnty);
             int newOrderId = p0Repo.GetLastCupcakeOrderAdded();

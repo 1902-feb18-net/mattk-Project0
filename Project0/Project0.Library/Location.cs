@@ -41,20 +41,5 @@ namespace Project0.Library
             }
             return true;
         }
-
-        //public void UpdateInv(Cupcake lookupCupcake, int qnty)
-        //{
-        //    double[] cupcakeRequirements = lookupCupcake.GetIngredients();
-
-        //    int i = 0;
-        //    foreach (var item in StoreInv)
-        //    {
-        //        StoreInv[i] -= (double)(cupcakeRequirements[i] * qnty);
-        //        i++;
-        //    }
-        //}
-
-
-
     }
 }
