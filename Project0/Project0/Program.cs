@@ -169,19 +169,13 @@ namespace Project0
                 Console.WriteLine("This store has exhausted supply of that cupcake. Try back in 24 hours.");
                 return;
             }
-            //bool cupcakeAllowed = Location.CheckCupcakeExhaustion(storeLocationId, cupcake, orders);
-            //if (!cupcakeAllowed)
-            //{
-            //    Console.WriteLine("This store has exhausted supply of that cupcake. Try back in 24 hours.");
-            //    return;
-            //}
-            //bool orderFeasible = Order.CheckOrderFeasible(storeLocationId, storeLocations,
-            //    cupcakeTuple.Item2, orderQnty);
-            //if (!orderFeasible)
-            //{
-            //    Console.WriteLine("This store does not have enough ingredients to place the requested order.");
-            //    return;
-            //}
+            var recipe = p0Repo.GetRecipe(cupcakeId);
+            var locationInv = p0Repo.GetLocationInv(storeLocationId);
+            if (!Library.Location.CheckOrderFeasible(recipe, locationInv, orderQnty))
+            {
+                Console.WriteLine("This store does not have enough ingredients to place the requested order.");
+                return;
+            }
             //bool customerCanOrder = Order.CheckCustomerCanOrder(customerId,
             //    storeLocationId, customers);
             //if (!customerCanOrder)
@@ -192,6 +186,7 @@ namespace Project0
 
             p0Repo.AddCupcakeOrder(storeLocationId, customerId, cupcakeId, orderQnty);
             int newOrderId = p0Repo.GetLastCupcakeOrderAdded();
+            p0Repo.UpdateLocationInv(storeLocationId, recipe, orderQnty);
             Console.WriteLine($"Order with id of {newOrderId} successfully created!");
         }
     }

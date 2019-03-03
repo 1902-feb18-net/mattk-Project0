@@ -29,22 +29,18 @@ namespace Project0.Library
             }
         }
 
-
-        //public bool CheckInv(Cupcake lookupCupcake, int qnty)
-        //{
-        //    double[] cupcakeRequirements = lookupCupcake.GetIngredients();
-
-        //    int i = 0;
-        //    foreach (var item in StoreInv)
-        //    {
-        //        if (StoreInv[i] < (double)(cupcakeRequirements[i] * qnty))
-        //        {
-        //            return false;
-        //        }
-        //        i++;
-        //    }
-        //    return true;
-        //}
+        public static bool CheckOrderFeasible(Dictionary<int, decimal> recipe, 
+            Dictionary<int, decimal> locationInv, int qnty)
+        {
+            foreach (var item in locationInv)
+            {
+                if (locationInv[item.Key] < recipe[item.Key] * qnty)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         //public void UpdateInv(Cupcake lookupCupcake, int qnty)
         //{

@@ -30,7 +30,7 @@ namespace Project0.DataAccess
                 var locationInv = new LocationInventory();
                 locationInv.IngredientId = item.IngredientId;
                 locationInv.LocationId = storeLocationId;
-                locationInv.Amount = 500;
+                locationInv.Amount = 120;
                 Context.LocationInventory.Add(locationInv);
             }
             Context.SaveChanges();
@@ -86,6 +86,29 @@ namespace Project0.DataAccess
             return newCupcakeOrder.OrderId;
         }
 
+        public Dictionary<int, decimal> GetRecipe(int cupcakeId)
+        {
+            var recipeLookup = Context.RecipeItem.Where(r => r.CupcakeId == cupcakeId).ToList();
+            Dictionary<int, decimal> recipe = new Dictionary<int, decimal>();
+            foreach (var item in recipeLookup)
+            {
+                recipe[item.IngredientId] = item.Amount;
+            }
+            return recipe;
+        }
+
+        public Dictionary<int, decimal> GetLocationInv(int storeLocationId)
+        {
+            var locationInvLookup = Context.LocationInventory.Where(li => li.LocationId == storeLocationId);
+            Dictionary<int, decimal> locationInv = new Dictionary<int, decimal>();
+            foreach (var item in locationInvLookup)
+            {
+                locationInv[item.IngredientId] = item.Amount;
+            }
+            return locationInv;
+        }
+
+
         public IEnumerable<Library.Location> GetAllStoreLocations()
         {
             IEnumerable<DataAccess.Location> locations = Context.Location.ToList();
@@ -137,6 +160,14 @@ namespace Project0.DataAccess
             return false;
         }
 
-       
+        public void UpdateLocationInv(int storeLocationId, Dictionary<int, decimal> recipe, int qnty)
+        {
+            foreach (var locationInv in Context.LocationInventory.Where(li => li.LocationId == storeLocationId))
+            {
+                locationInv.Amount -= recipe[locationInv.IngredientId] * qnty;
+            }
+            Context.SaveChanges();
+        }
+
     }
 }

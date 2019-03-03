@@ -13,6 +13,8 @@ namespace Project0.DataAccess
         int GetLastLocationAdded();
         int GetLastCustomerAdded();
         int GetLastCupcakeOrderAdded();
+        Dictionary<int, decimal> GetRecipe(int cupcakeId);
+        Dictionary<int, decimal> GetLocationInv(int storeLocationId);
         IEnumerable<Library.Location> GetAllStoreLocations();
         IEnumerable<Library.Customer> GetAllCustomers();
         IEnumerable<Library.Cupcake> GetAllCupcakes();
@@ -20,6 +22,7 @@ namespace Project0.DataAccess
         bool CheckLocationExists(int storeLocationId);
         bool CheckCustomerExists(int customerId);
         bool CheckCupcakeExists(int cupcakeId);
+        void UpdateLocationInv(int storeLocationId, Dictionary<int, decimal> recipe, int qnty);
         
         //IEnumerable<Movie> GetAllMovies();
         //IEnumerable<Movie> GetAllGenres();
