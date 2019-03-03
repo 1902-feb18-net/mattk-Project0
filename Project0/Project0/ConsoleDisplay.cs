@@ -26,7 +26,7 @@ namespace Project0
             Console.WriteLine("Please type a selection, or type 'q' to quit: ");
         }
 
-        public static void LocationList(Project0Repo p0Repo)
+        public static void LocationList(IProject0Repo p0Repo)
         {
             Console.WriteLine("List of Available Store Locations:");
             Console.WriteLine();
@@ -38,7 +38,7 @@ namespace Project0
             Console.WriteLine();
         }
 
-        public static void CustomerList(Project0Repo p0Repo)
+        public static void CustomerList(IProject0Repo p0Repo)
         {
             Console.WriteLine("List of Customers:");
             Console.WriteLine();
@@ -51,7 +51,7 @@ namespace Project0
             Console.WriteLine();
         }
 
-        public static void OrderList(Project0Repo p0Repo, List<Library.Order> orders, 
+        public static void OrderList(IProject0Repo p0Repo, List<Library.Order> orders, 
             List<Library.Cupcake> cupcakes, List<Library.Location> storeLocations)
         {
             Console.WriteLine();
@@ -105,7 +105,7 @@ namespace Project0
             }
         }
 
-        public static void DisplayOrders(Project0Repo p0Repo, List<Library.Order> orders,
+        public static void DisplayOrders(IProject0Repo p0Repo, List<Library.Order> orders,
             List<Library.Cupcake> cupcakes, List<Library.Location> storeLocations, string prompt)
         {
             Console.WriteLine(prompt);
@@ -134,7 +134,7 @@ namespace Project0
             Console.WriteLine();
         }
 
-        public static void CupcakeList(Project0Repo p0Repo)
+        public static void CupcakeList(IProject0Repo p0Repo)
         {
             Console.WriteLine("List of Cupcakes:");
             Console.WriteLine();

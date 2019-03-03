@@ -29,7 +29,7 @@ namespace Project0
 
             using (var dbContext = new Project0Context(options))
             {
-                var p0Repo = new Project0Repo(dbContext);
+                IProject0Repo p0Repo = new Project0Repo(dbContext);
 
                 Console.WriteLine("Welcome to Matt's Cupcakes Manager");
                 Console.WriteLine();
@@ -88,7 +88,7 @@ namespace Project0
             }
         }
 
-        public static void GetDataAndAddLocation(Project0Repo p0Repo)
+        public static void GetDataAndAddLocation(IProject0Repo p0Repo)
         {
             p0Repo.AddStoreLocation();
             int newLocationId = p0Repo.GetLastLocationAdded();
@@ -96,7 +96,7 @@ namespace Project0
             Console.WriteLine($"Location with id of {newLocationId} successfully created!");
         }
 
-        public static void GetDataAndAddCustomer(Project0Repo p0Repo)
+        public static void GetDataAndAddCustomer(IProject0Repo p0Repo)
         {
             string fName = ConsoleRead.GetCustomerFirstName();
             if (fName is null) { return; }
@@ -119,7 +119,7 @@ namespace Project0
             Console.WriteLine($"Location with id of {newCustomerId} successfully created!");
         }
 
-        public static void GetDataAndAddOrder(Project0Repo p0Repo)
+        public static void GetDataAndAddOrder(IProject0Repo p0Repo)
         {
             NLog.ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -177,7 +177,7 @@ namespace Project0
                 Console.WriteLine("This store does not have enough ingredients to place the requested order.");
                 return;
             }
-            if (Library.Customer.CheckCustomerCanOrder(customerId, storeLocationId, orders))
+            if (Library.Customer.CheckCustomerCannotOrder(customerId, storeLocationId, orders))
             {
                 Console.WriteLine("Customer can't place an order at this store because it hasn't been 2 hours \n" +
                     "since there last order yet.");

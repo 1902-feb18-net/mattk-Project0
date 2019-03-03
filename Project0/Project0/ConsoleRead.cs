@@ -14,7 +14,7 @@ namespace Project0
             input = Console.ReadLine().ToUpper();
         }
 
-        public static void LocationOrders(Project0Repo p0Repo)
+        public static void LocationOrders(IProject0Repo p0Repo)
         {
             int storeLocationId = GetStoreLocation(p0Repo,
                 "Please enter the store id to get that store's orders:");
@@ -29,7 +29,7 @@ namespace Project0
             ConsoleDisplay.OrderList(p0Repo, locationOrderHistory, cupcakes, null);
         }
 
-        public static void CustomerSearch(Project0Repo p0Repo)
+        public static void CustomerSearch(IProject0Repo p0Repo)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -74,7 +74,7 @@ namespace Project0
             }
         }
 
-        public static void CustomerOrders(Project0Repo p0Repo)
+        public static void CustomerOrders(IProject0Repo p0Repo)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -100,7 +100,7 @@ namespace Project0
             }
         }
 
-        public static void OrderRecommended(Project0Repo p0Repo)
+        public static void OrderRecommended(IProject0Repo p0Repo)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -173,7 +173,7 @@ namespace Project0
             }
         }
 
-        public static int GetStoreLocation(Project0Repo p0Repo, string prompt)
+        public static int GetStoreLocation(IProject0Repo p0Repo, string prompt)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -192,7 +192,7 @@ namespace Project0
             }
         }
 
-        public static int GetCustomer(Project0Repo p0Repo)
+        public static int GetCustomer(IProject0Repo p0Repo)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -211,7 +211,7 @@ namespace Project0
             }
         }
 
-        public static int GetCupcake(Project0Repo p0Repo)
+        public static int GetCupcake(IProject0Repo p0Repo)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 

@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Xunit;
+
+namespace Project0.Test
+{
+    public class CustomerTest
+    {
+        [Fact]
+        public void TestCheckCustomerCannotOrderFalse()
+        {
+            // Arrange
+            int storeLocationId = 1;
+            int customerId = 1;
+
+            List<Library.Order> orders = new List<Library.Order>
+            {
+                new Library.Order
+                {
+                    Id = 1,
+                    OrderLocation = 1,
+                    OrderCustomer = 1,
+                    OrderCupcake = 1,
+                    OrderQuantity = 999,
+                    OrderTime = DateTime.Now.AddMinutes(-121)
+                }
+            };
+
+            // Act and Assert
+            Assert.False(Library.Customer.CheckCustomerCannotOrder(customerId, storeLocationId, orders));
+        }
+
+
+        [Fact]
+        public void TestCheckCustomerCannotOrderTrue()
+        {
+            // Arrange
+            int storeLocationId = 1;
+            int customerId = 1;
+
+            List<Library.Order> orders = new List<Library.Order>
+            {
+                new Library.Order
+                {
+                    Id = 1,
+                    OrderLocation = 1,
+                    OrderCustomer = 1,
+                    OrderCupcake = 1,
+                    OrderQuantity = 999,
+                    OrderTime = DateTime.Now
+                }
+            };
+
+            // Act and Assert
+            Assert.True(Library.Customer.CheckCustomerCannotOrder(customerId, storeLocationId, orders));
+        }
+    }
+}
