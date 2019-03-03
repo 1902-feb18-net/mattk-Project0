@@ -163,6 +163,12 @@ namespace Project0
                 Console.WriteLine("Maximum order quantity is 500.");
                 return;
             }
+            var orders = p0Repo.GetAllOrders().ToList();
+            if (!Library.Location.CheckCanOrderCupcake(storeLocationId, cupcakeId, orders))
+            {
+                Console.WriteLine("This store has exhausted supply of that cupcake. Try back in 24 hours.");
+                return;
+            }
             //bool cupcakeAllowed = Location.CheckCupcakeExhaustion(storeLocationId, cupcake, orders);
             //if (!cupcakeAllowed)
             //{
@@ -184,9 +190,9 @@ namespace Project0
             //    return;
             //}
 
-            //int newOrderId = Order.AddOrder(storeLocationId, customerId, cupcakeTuple.Item1, cupcakeTuple.Item2, orderQnty,
-            //    jsonLocations, jsonCustomers, jsonOrders, customers, storeLocations, orders);
-            //Console.WriteLine($"Order with id of {newOrderId} successfully created!");
+            p0Repo.AddCupcakeOrder(storeLocationId, customerId, cupcakeId, orderQnty);
+            int newOrderId = p0Repo.GetLastCupcakeOrderAdded();
+            Console.WriteLine($"Order with id of {newOrderId} successfully created!");
         }
     }
 }

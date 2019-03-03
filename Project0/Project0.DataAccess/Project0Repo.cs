@@ -48,6 +48,20 @@ namespace Project0.DataAccess
             Context.SaveChanges();
         }
 
+        public void AddCupcakeOrder(int storeLocationId, int customerId, int cupcakeId, int qnty)
+        {
+            var newOrder = new CupcakeOrder
+            {
+                LocationId = storeLocationId,
+                CustomerId = customerId,
+                CupcakeId = cupcakeId,
+                Quantity = qnty,
+                OrderTime = DateTime.Now
+            };
+            Context.CupcakeOrder.Add(newOrder);
+            Context.SaveChanges();
+        }
+
         public int GetLastLocationAdded()
         {
             var newLocation = Context.Location
@@ -62,6 +76,14 @@ namespace Project0.DataAccess
                 .OrderByDescending(x => x.CustomerId)
                 .First();
             return newCustomer.CustomerId;
+        }
+
+        public int GetLastCupcakeOrderAdded()
+        {
+            var newCupcakeOrder = Context.CupcakeOrder
+                .OrderByDescending(x => x.OrderId)
+                .First();
+            return newCupcakeOrder.OrderId;
         }
 
         public IEnumerable<Library.Location> GetAllStoreLocations()
@@ -80,6 +102,12 @@ namespace Project0.DataAccess
         {
             IEnumerable<DataAccess.Cupcake> cupcakes = Context.Cupcake.ToList();
             return Mapper.Map(cupcakes);
+        }
+
+        public IEnumerable<Library.Order> GetAllOrders()
+        {
+            IEnumerable<DataAccess.CupcakeOrder> orders = Context.CupcakeOrder.ToList();
+            return Mapper.Map(orders);
         }
 
         public bool CheckLocationExists(int storeLocationId)
@@ -108,5 +136,7 @@ namespace Project0.DataAccess
             }
             return false;
         }
+
+       
     }
 }
