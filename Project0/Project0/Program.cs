@@ -61,7 +61,7 @@ namespace Project0
                     }
                     else if (input == "CL")
                     {
-                        //ConsoleDisplay.CustomerList(customers);
+                        ConsoleDisplay.CustomerList(p0Repo);
                     }
                     else if (input == "CS")
                     {
