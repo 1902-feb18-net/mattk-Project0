@@ -74,27 +74,31 @@ namespace Project0
             }
         }
 
-        //public static void CustomerOrders(List<Customer> customers)
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
+        public static void CustomerOrders(Project0Repo p0Repo)
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    ConsoleDisplay.CustomerList(customers);
-        //    Console.WriteLine("Please enter the customer id to get that customer's orders:");
-        //    var input = Console.ReadLine();
+            var customers = p0Repo.GetAllCustomers().ToList();
 
-        //    if (int.TryParse(input, out var customerId))
-        //    {
-        //        foreach (var item in customers.Where(c => c.Id == customerId))
-        //        {
-        //            Console.WriteLine($"Customer {item.FirstName} {item.LastName}");
-        //            ConsoleDisplay.OrderList(item.OrderHistory, null);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        logger.Error($"Invalid input {input}");
-        //    }
-        //}
+            ConsoleDisplay.CustomerList(p0Repo);
+            Console.WriteLine("Please enter the customer id to get that customer's orders:");
+            var input = Console.ReadLine();
+
+            if (int.TryParse(input, out var customerId))
+            {
+                foreach (var item in customers.Where(c => c.Id == customerId))
+                {
+                    Console.WriteLine($"Customer {item.FirstName} {item.LastName}");
+                    var customerOrderHistory = p0Repo.GetCustomerOrderHistory(customerId).ToList();
+                    var cupcakes = p0Repo.GetAllCupcakes().ToList();
+                    ConsoleDisplay.OrderList(p0Repo, customerOrderHistory, cupcakes, null);
+                }
+            }
+            else
+            {
+                logger.Error($"Invalid input {input}");
+            }
+        }
 
         //public static void OrderRecommended(List<Customer> customers, List<Order> orders)
         //{

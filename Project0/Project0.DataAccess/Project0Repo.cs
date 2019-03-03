@@ -140,6 +140,13 @@ namespace Project0.DataAccess
             return Mapper.Map(locationOrderHistory);
         }
 
+        public IEnumerable<Library.Order> GetCustomerOrderHistory(int customerId)
+        {
+            IEnumerable<DataAccess.CupcakeOrder> customerOrderHistory =
+                    Context.CupcakeOrder.Where(co => co.CustomerId == customerId).ToList();
+            return Mapper.Map(customerOrderHistory);
+        }
+
         public bool CheckLocationExists(int storeLocationId)
         {
             if (Context.Location.Any(l => l.LocationId == storeLocationId))

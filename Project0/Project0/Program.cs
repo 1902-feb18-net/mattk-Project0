@@ -69,7 +69,7 @@ namespace Project0
                     }
                     else if (input == "CO")
                     {
-                        //ConsoleRead.CustomerOrders(customers);
+                        ConsoleRead.CustomerOrders(p0Repo);
                     }
                     else if (input == "OL")
                     {

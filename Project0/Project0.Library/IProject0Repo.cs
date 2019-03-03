@@ -20,6 +20,7 @@ namespace Project0.DataAccess
         IEnumerable<Library.Cupcake> GetAllCupcakes();
         IEnumerable<Library.Order> GetAllOrders();
         IEnumerable<Library.Order> GetLocationOrderHistory(int storeLocationId);
+        IEnumerable<Library.Order> GetCustomerOrderHistory(int customerId);
         bool CheckLocationExists(int storeLocationId);
         bool CheckCustomerExists(int customerId);
         bool CheckCupcakeExists(int cupcakeId);
