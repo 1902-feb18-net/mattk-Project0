@@ -12,11 +12,11 @@ namespace Project0.Library
         public string LastName { get; set; }
         public int DefaultStore { get; set; }
 
-        public static bool CheckCustomerCannotOrder(int customerId, int storeLocationId, 
+        public static bool CheckCustomerCannotOrder(int customerId, int locationId, 
             List<Order> orders)
         {
             return orders.Where(o => o.OrderCustomer == customerId)
-                        .Where(o => o.OrderLocation == storeLocationId)
+                        .Where(o => o.OrderLocation == locationId)
                         .Any(o => DateTime.Now.Subtract(o.OrderTime).TotalMinutes < 120);
         }
     }

@@ -16,16 +16,16 @@ namespace Project0
 
         public static void LocationOrders(IProject0Repo p0Repo)
         {
-            int storeLocationId = GetStoreLocation(p0Repo,
-                "Please enter the store id to get that store's orders:");
-            if (storeLocationId == -1)
+            int locationId = GetLocation(p0Repo,
+                "Please enter the store location Id to get that location's orders:");
+            if (locationId == -1)
             {
                 return;
             }
 
             var cupcakes = p0Repo.GetAllCupcakes().ToList();
-            var locationOrderHistory = p0Repo.GetLocationOrderHistory(storeLocationId).ToList();
-            Console.WriteLine($"Store Location {storeLocationId}");
+            var locationOrderHistory = p0Repo.GetLocationOrderHistory(locationId).ToList();
+            Console.WriteLine($"Store Location {locationId}");
             ConsoleDisplay.OrderList(p0Repo, locationOrderHistory, cupcakes, null);
         }
 
@@ -81,7 +81,7 @@ namespace Project0
             var customers = p0Repo.GetAllCustomers().ToList();
 
             ConsoleDisplay.CustomerList(p0Repo);
-            Console.WriteLine("Please enter the customer id to get that customer's orders:");
+            Console.WriteLine("Please enter the customer Id to get that customer's orders:");
             var input = Console.ReadLine();
 
             if (int.TryParse(input, out var customerId))
@@ -173,7 +173,7 @@ namespace Project0
             }
         }
 
-        public static int GetStoreLocation(IProject0Repo p0Repo, string prompt)
+        public static int GetLocation(IProject0Repo p0Repo, string prompt)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -181,9 +181,9 @@ namespace Project0
             Console.WriteLine(prompt);
             var input = Console.ReadLine();
 
-            if (int.TryParse(input, out var storeLocationId))
+            if (int.TryParse(input, out var locationId))
             {
-                return storeLocationId;
+                return locationId;
             }
             else
             {

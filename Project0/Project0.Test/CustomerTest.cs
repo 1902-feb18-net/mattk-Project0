@@ -11,7 +11,7 @@ namespace Project0.Test
         public void TestCheckCustomerCannotOrderFalse()
         {
             // Arrange
-            int storeLocationId = 1;
+            int locationId = 1;
             int customerId = 1;
 
             List<Library.Order> orders = new List<Library.Order>
@@ -28,7 +28,7 @@ namespace Project0.Test
             };
 
             // Act and Assert
-            Assert.False(Library.Customer.CheckCustomerCannotOrder(customerId, storeLocationId, orders));
+            Assert.False(Library.Customer.CheckCustomerCannotOrder(customerId, locationId, orders));
         }
 
 
@@ -36,7 +36,7 @@ namespace Project0.Test
         public void TestCheckCustomerCannotOrderTrue()
         {
             // Arrange
-            int storeLocationId = 1;
+            int locationId = 1;
             int customerId = 1;
 
             List<Library.Order> orders = new List<Library.Order>
@@ -53,7 +53,7 @@ namespace Project0.Test
             };
 
             // Act and Assert
-            Assert.True(Library.Customer.CheckCustomerCannotOrder(customerId, storeLocationId, orders));
+            Assert.True(Library.Customer.CheckCustomerCannotOrder(customerId, locationId, orders));
         }
     }
 }

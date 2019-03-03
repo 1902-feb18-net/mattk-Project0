@@ -15,7 +15,7 @@ namespace Project0
             Console.WriteLine("'S': Add a store location to the database.");
             Console.WriteLine("'C': Add a customer to the database.");
             Console.WriteLine("'O': Add an order to the database.");
-            Console.WriteLine("'LL': Get a list of available stores and their id numbers.");
+            Console.WriteLine("'LL': Get a list of available store locations and their Id numbers.");
             Console.WriteLine("'LO': Get a store's order history.");
             Console.WriteLine("'CL': Get a list of available customers and their information.");
             Console.WriteLine("'CS': Search for customers by name.");
@@ -30,10 +30,10 @@ namespace Project0
         {
             Console.WriteLine("List of Available Store Locations:");
             Console.WriteLine();
-            var locations = p0Repo.GetAllStoreLocations().ToList();
+            var locations = p0Repo.GetAllLocations().ToList();
             foreach (var item in locations)
             {
-                Console.WriteLine($"Store Id: {item.Id}");
+                Console.WriteLine($"Location Id: {item.Id}");
             }
             Console.WriteLine();
         }
@@ -46,13 +46,13 @@ namespace Project0
             foreach (var item in customers)
             {
                 Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
-                    $"Last Name, {item.LastName}, Default Store Id: {item.DefaultStore}");
+                    $"Last Name, {item.LastName}, Default Location Id: {item.DefaultStore}");
             }
             Console.WriteLine();
         }
 
         public static void OrderList(IProject0Repo p0Repo, List<Library.Order> orders, 
-            List<Library.Cupcake> cupcakes, List<Library.Location> storeLocations)
+            List<Library.Cupcake> cupcakes, List<Library.Location> locations)
         {
             Console.WriteLine();
             Console.WriteLine("Please select from the following filters ('n' for no filter)");
@@ -71,7 +71,7 @@ namespace Project0
                 {
                     modOrders.Add(item);
                 }
-                DisplayOrders(p0Repo, modOrders, cupcakes, storeLocations, "List of Orders (earliest to latest):");
+                DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (earliest to latest):");
             }
             else if (input == "L")
             {
@@ -79,7 +79,7 @@ namespace Project0
                 {
                     modOrders.Add(item);
                 }
-                DisplayOrders(p0Repo, modOrders, cupcakes, storeLocations, "List of Orders (latest to earliest):");
+                DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (latest to earliest):");
             }
             else if (input == "C")
             {
@@ -88,7 +88,7 @@ namespace Project0
                 {
                     modOrders.Add(item);
                 }
-                DisplayOrders(p0Repo, modOrders, cupcakes, storeLocations, "List of Orders (cheapest to most expensive):");
+                DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (cheapest to most expensive):");
             }
             else if (input == "X")
             {
@@ -97,16 +97,16 @@ namespace Project0
                 {
                     modOrders.Add(item);
                 }
-                DisplayOrders(p0Repo, modOrders, cupcakes, storeLocations, "List of Orders (most expensive to cheapest):");
+                DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (most expensive to cheapest):");
             }
             else
             {
-                DisplayOrders(p0Repo, orders, cupcakes, storeLocations, "List of Orders:");
+                DisplayOrders(p0Repo, orders, cupcakes, locations, "List of Orders:");
             }
         }
 
         public static void DisplayOrders(IProject0Repo p0Repo, List<Library.Order> orders,
-            List<Library.Cupcake> cupcakes, List<Library.Location> storeLocations, string prompt)
+            List<Library.Cupcake> cupcakes, List<Library.Location> locations, string prompt)
         {
             Console.WriteLine(prompt);
             Console.WriteLine();
@@ -125,9 +125,9 @@ namespace Project0
                 $"{orders.Average(o => o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)}");
             Console.WriteLine($"Order with the latest date: " +
                 $"{orders.Max(o => o.OrderTime)}");
-            if (!(storeLocations is null))
+            if (!(locations is null))
             {
-                var storeWithMostOrders = storeLocations.MaxBy(sL => 
+                var storeWithMostOrders = locations.MaxBy(sL => 
                 p0Repo.GetLocationOrderHistory(sL.Id).Count()).First();
                 Console.WriteLine($"Store Id with the most orders: {storeWithMostOrders.Id}");
             }

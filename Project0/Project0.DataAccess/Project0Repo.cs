@@ -14,45 +14,42 @@ namespace Project0.DataAccess
             Context = dbContext;
         }
 
-        public void AddStoreLocation()
+        public void AddLocation()
         {
-            var newLocation = new Location();
-            Context.Location.Add(newLocation);
+            Context.Location.Add(new Location());
             Context.SaveChanges();
         }
 
-        public void FillLocationInventory(int storeLocationId)
+        public void FillLocationInventory(int locationId)
         {
-            var ingredients = Context.Ingredient.ToList();
-            var recipeItems = Context.RecipeItem.ToList();
-            foreach (var item in ingredients)
+            foreach (var item in Context.Ingredient.ToList())
             {
                 var locationInv = new LocationInventory();
                 locationInv.IngredientId = item.IngredientId;
-                locationInv.LocationId = storeLocationId;
+                locationInv.LocationId = locationId;
                 locationInv.Amount = 120;
                 Context.LocationInventory.Add(locationInv);
             }
             Context.SaveChanges();
         }
 
-        public void AddCustomer(string fName, string lName, int storeLocationId)
+        public void AddCustomer(string fName, string lName, int locationId)
         {
             var newCustomer = new Customer
             {
                 FirstName = fName,
                 LastName = lName,
-                DefaultStore = storeLocationId
+                DefaultStore = locationId
             };
             Context.Customer.Add(newCustomer);
             Context.SaveChanges();
         }
 
-        public void AddCupcakeOrder(int storeLocationId, int customerId, int cupcakeId, int qnty)
+        public void AddCupcakeOrder(int locationId, int customerId, int cupcakeId, int qnty)
         {
             var newOrder = new CupcakeOrder
             {
-                LocationId = storeLocationId,
+                LocationId = locationId,
                 CustomerId = customerId,
                 CupcakeId = cupcakeId,
                 Quantity = qnty,
@@ -64,44 +61,39 @@ namespace Project0.DataAccess
 
         public int GetLastLocationAdded()
         {
-            var newLocation = Context.Location
+            return Context.Location
                 .OrderByDescending(x => x.LocationId)
-                .First();
-            return newLocation.LocationId;
+                .First().LocationId;
         }
 
         public int GetLastCustomerAdded()
         {
-            var newCustomer = Context.Customer
+            return Context.Customer
                 .OrderByDescending(x => x.CustomerId)
-                .First();
-            return newCustomer.CustomerId;
+                .First().CustomerId;
         }
 
         public int GetLastCupcakeOrderAdded()
         {
-            var newCupcakeOrder = Context.CupcakeOrder
+            return Context.CupcakeOrder
                 .OrderByDescending(x => x.OrderId)
-                .First();
-            return newCupcakeOrder.OrderId;
+                .First().OrderId;
         }
 
         public Dictionary<int, decimal> GetRecipe(int cupcakeId)
         {
-            var recipeLookup = Context.RecipeItem.Where(r => r.CupcakeId == cupcakeId).ToList();
             Dictionary<int, decimal> recipe = new Dictionary<int, decimal>();
-            foreach (var item in recipeLookup)
+            foreach (var item in Context.RecipeItem.Where(r => r.CupcakeId == cupcakeId).ToList())
             {
                 recipe[item.IngredientId] = item.Amount;
             }
             return recipe;
         }
 
-        public Dictionary<int, decimal> GetLocationInv(int storeLocationId)
+        public Dictionary<int, decimal> GetLocationInv(int locationId)
         {
-            var locationInvLookup = Context.LocationInventory.Where(li => li.LocationId == storeLocationId);
             Dictionary<int, decimal> locationInv = new Dictionary<int, decimal>();
-            foreach (var item in locationInvLookup)
+            foreach (var item in Context.LocationInventory.Where(li => li.LocationId == locationId))
             {
                 locationInv[item.IngredientId] = item.Amount;
             }
@@ -109,74 +101,54 @@ namespace Project0.DataAccess
         }
 
 
-        public IEnumerable<Library.Location> GetAllStoreLocations()
+        public IEnumerable<Library.Location> GetAllLocations()
         {
-            IEnumerable<DataAccess.Location> locations = Context.Location.ToList();
-            return Mapper.Map(locations);
+            return Mapper.Map(Context.Location.ToList());
         }
 
         public IEnumerable<Library.Customer> GetAllCustomers()
         {
-            IEnumerable<DataAccess.Customer> customers = Context.Customer.ToList();
-            return Mapper.Map(customers);
+            return Mapper.Map(Context.Customer.ToList());
         }
 
         public IEnumerable<Library.Cupcake> GetAllCupcakes()
         {
-            IEnumerable<DataAccess.Cupcake> cupcakes = Context.Cupcake.ToList();
-            return Mapper.Map(cupcakes);
+            return Mapper.Map(Context.Cupcake.ToList());
         }
 
         public IEnumerable<Library.Order> GetAllOrders()
         {
-            IEnumerable<DataAccess.CupcakeOrder> orders = Context.CupcakeOrder.ToList();
-            return Mapper.Map(orders);
+            return Mapper.Map(Context.CupcakeOrder.ToList());
         }
 
-        public IEnumerable<Library.Order> GetLocationOrderHistory(int storeLocationId)
+        public IEnumerable<Library.Order> GetLocationOrderHistory(int locationId)
         {
-            IEnumerable<DataAccess.CupcakeOrder> locationOrderHistory = 
-                    Context.CupcakeOrder.Where(co => co.LocationId == storeLocationId).ToList();
-            return Mapper.Map(locationOrderHistory);
+            return Mapper.Map(Context.CupcakeOrder.Where(co => co.LocationId == locationId).ToList());
         }
 
         public IEnumerable<Library.Order> GetCustomerOrderHistory(int customerId)
         {
-            IEnumerable<DataAccess.CupcakeOrder> customerOrderHistory =
-                    Context.CupcakeOrder.Where(co => co.CustomerId == customerId).ToList();
-            return Mapper.Map(customerOrderHistory);
+            return Mapper.Map(Context.CupcakeOrder.Where(co => co.CustomerId == customerId).ToList());
         }
 
-        public bool CheckLocationExists(int storeLocationId)
+        public bool CheckLocationExists(int locationId)
         {
-            if (Context.Location.Any(l => l.LocationId == storeLocationId))
-            {
-                return true;
-            }
-            return false;            
+            return Context.Location.Any(l => l.LocationId == locationId);
         }
 
         public bool CheckCustomerExists(int customerId)
         {
-            if (Context.Customer.Any(l => l.CustomerId == customerId))
-            {
-                return true;
-            }
-            return false;
+            return Context.Customer.Any(l => l.CustomerId == customerId);
         }
 
         public bool CheckCupcakeExists(int cupcakeId)
         {
-            if (Context.Cupcake.Any(l => l.CupcakeId == cupcakeId))
-            {
-                return true;
-            }
-            return false;
+            return Context.Cupcake.Any(l => l.CupcakeId == cupcakeId);
         }
 
-        public void UpdateLocationInv(int storeLocationId, Dictionary<int, decimal> recipe, int qnty)
+        public void UpdateLocationInv(int locationId, Dictionary<int, decimal> recipe, int qnty)
         {
-            foreach (var locationInv in Context.LocationInventory.Where(li => li.LocationId == storeLocationId))
+            foreach (var locationInv in Context.LocationInventory.Where(li => li.LocationId == locationId))
             {
                 locationInv.Amount -= recipe[locationInv.IngredientId] * qnty;
             }

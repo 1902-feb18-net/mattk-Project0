@@ -6,24 +6,24 @@ namespace Project0.DataAccess
 {
     public interface IProject0Repo
     {
-        void AddStoreLocation();
-        void FillLocationInventory(int storeLocationId);
-        void AddCustomer(string fName, string lName, int storeLocationId);
-        void AddCupcakeOrder(int storeLocationId, int customerId, int cupcakeId, int qnty);
+        void AddLocation();
+        void FillLocationInventory(int locationId);
+        void AddCustomer(string fName, string lName, int locationId);
+        void AddCupcakeOrder(int locationId, int customerId, int cupcakeId, int qnty);
         int GetLastLocationAdded();
         int GetLastCustomerAdded();
         int GetLastCupcakeOrderAdded();
         Dictionary<int, decimal> GetRecipe(int cupcakeId);
-        Dictionary<int, decimal> GetLocationInv(int storeLocationId);
-        IEnumerable<Library.Location> GetAllStoreLocations();
+        Dictionary<int, decimal> GetLocationInv(int locationId);
+        IEnumerable<Library.Location> GetAllLocations();
         IEnumerable<Library.Customer> GetAllCustomers();
         IEnumerable<Library.Cupcake> GetAllCupcakes();
         IEnumerable<Library.Order> GetAllOrders();
-        IEnumerable<Library.Order> GetLocationOrderHistory(int storeLocationId);
+        IEnumerable<Library.Order> GetLocationOrderHistory(int locationId);
         IEnumerable<Library.Order> GetCustomerOrderHistory(int customerId);
-        bool CheckLocationExists(int storeLocationId);
+        bool CheckLocationExists(int locationId);
         bool CheckCustomerExists(int customerId);
         bool CheckCupcakeExists(int cupcakeId);
-        void UpdateLocationInv(int storeLocationId, Dictionary<int, decimal> recipe, int qnty);
+        void UpdateLocationInv(int locationId, Dictionary<int, decimal> recipe, int qnty);
     }
 }

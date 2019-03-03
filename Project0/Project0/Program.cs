@@ -74,7 +74,7 @@ namespace Project0
                     else if (input == "OL")
                     {
                         ConsoleDisplay.OrderList(p0Repo, p0Repo.GetAllOrders().ToList(),
-                            p0Repo.GetAllCupcakes().ToList(), p0Repo.GetAllStoreLocations().ToList());
+                            p0Repo.GetAllCupcakes().ToList(), p0Repo.GetAllLocations().ToList());
                     }
                     else if (input == "OR")
                     {
@@ -90,10 +90,10 @@ namespace Project0
 
         public static void GetDataAndAddLocation(IProject0Repo p0Repo)
         {
-            p0Repo.AddStoreLocation();
+            p0Repo.AddLocation();
             int newLocationId = p0Repo.GetLastLocationAdded();
             p0Repo.FillLocationInventory(newLocationId);
-            Console.WriteLine($"Location with id of {newLocationId} successfully created!");
+            Console.WriteLine($"Location with Id of {newLocationId} successfully created!");
         }
 
         public static void GetDataAndAddCustomer(IProject0Repo p0Repo)
@@ -102,36 +102,36 @@ namespace Project0
             if (fName is null) { return; }
             string lName = ConsoleRead.GetCustomerLastName();
             if (lName is null) { return; }
-            var locations = p0Repo.GetAllStoreLocations().ToList();
+            var locations = p0Repo.GetAllLocations().ToList();
             if (locations.Count() <= 0)
             {
-                Console.WriteLine("You must add at least one store before you can add a customer.");
+                Console.WriteLine("You must add at least one store location before you can add a customer.");
                 return;
             }
            
-            int storeLocationId = ConsoleRead.GetStoreLocation(p0Repo,
+            int locationId = ConsoleRead.GetLocation(p0Repo,
                 "Please enter a valid Id for default store location:");
-            if (storeLocationId == -1) { return; }
-            if (!p0Repo.CheckLocationExists(storeLocationId)) { return; }
+            if (locationId == -1) { return; }
+            if (!p0Repo.CheckLocationExists(locationId)) { return; }
 
-            p0Repo.AddCustomer(fName, lName, storeLocationId);
+            p0Repo.AddCustomer(fName, lName, locationId);
             int newCustomerId = p0Repo.GetLastCustomerAdded();
-            Console.WriteLine($"Location with id of {newCustomerId} successfully created!");
+            Console.WriteLine($"Location with Id of {newCustomerId} successfully created!");
         }
 
         public static void GetDataAndAddOrder(IProject0Repo p0Repo)
         {
             NLog.ILogger logger = LogManager.GetCurrentClassLogger();
 
-            int storeLocationId = ConsoleRead.GetStoreLocation(p0Repo,
+            int locationId = ConsoleRead.GetLocation(p0Repo,
                 "Please enter a valid store Id for the order:");
-            if (storeLocationId == -1)
+            if (locationId == -1)
             {
                 return;
             }
-            if (!p0Repo.CheckLocationExists(storeLocationId))
+            if (!p0Repo.CheckLocationExists(locationId))
             {
-                logger.Error($"{storeLocationId} is not in the list of stores.");
+                logger.Error($"{locationId} is not in the list of stores.");
                 return;
             }
             int customerId = ConsoleRead.GetCustomer(p0Repo);
@@ -165,29 +165,29 @@ namespace Project0
                 return;
             }
             var orders = p0Repo.GetAllOrders().ToList();
-            if (!Library.Location.CheckCanOrderCupcake(storeLocationId, cupcakeId, orders))
+            if (!Library.Location.CheckCanOrderCupcake(locationId, cupcakeId, orders))
             {
                 Console.WriteLine("This store has exhausted supply of that cupcake. Try back in 24 hours.");
                 return;
             }
             var recipe = p0Repo.GetRecipe(cupcakeId);
-            var locationInv = p0Repo.GetLocationInv(storeLocationId);
+            var locationInv = p0Repo.GetLocationInv(locationId);
             if (!Library.Location.CheckOrderFeasible(recipe, locationInv, orderQnty))
             {
                 Console.WriteLine("This store does not have enough ingredients to place the requested order.");
                 return;
             }
-            if (Library.Customer.CheckCustomerCannotOrder(customerId, storeLocationId, orders))
+            if (Library.Customer.CheckCustomerCannotOrder(customerId, locationId, orders))
             {
                 Console.WriteLine("Customer can't place an order at this store because it hasn't been 2 hours \n" +
                     "since there last order yet.");
                 return;
             }
 
-            p0Repo.AddCupcakeOrder(storeLocationId, customerId, cupcakeId, orderQnty);
+            p0Repo.AddCupcakeOrder(locationId, customerId, cupcakeId, orderQnty);
             int newOrderId = p0Repo.GetLastCupcakeOrderAdded();
-            p0Repo.UpdateLocationInv(storeLocationId, recipe, orderQnty);
-            Console.WriteLine($"Order with id of {newOrderId} successfully created!");
+            p0Repo.UpdateLocationInv(locationId, recipe, orderQnty);
+            Console.WriteLine($"Order with Id of {newOrderId} successfully created!");
         }
     }
 }

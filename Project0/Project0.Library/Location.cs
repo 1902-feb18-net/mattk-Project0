@@ -9,9 +9,9 @@ namespace Project0.Library
     {
         public int Id { get; set; }
 
-        public static bool CheckCanOrderCupcake(int storeLocationId, int cupcakeId, List<Order> orders)
+        public static bool CheckCanOrderCupcake(int locationId, int cupcakeId, List<Order> orders)
         {
-            var ordersAtStore = orders.Where(o => o.OrderLocation == storeLocationId);
+            var ordersAtStore = orders.Where(o => o.OrderLocation == locationId);
             var ordersAtStoreRecently =
                 ordersAtStore.Where(o =>
                 Math.Abs(o.OrderTime.Subtract(DateTime.Now).TotalMinutes) < 1440);
@@ -19,14 +19,7 @@ namespace Project0.Library
                 ordersAtStoreRecently.Where(o => o.OrderCupcake == cupcakeId);
             int sum = ordersAtStoreRecentlyWithCupcake.Sum(o => o.OrderQuantity);
 
-            if (sum < 1000)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return sum < 1000;
         }
 
         public static bool CheckOrderFeasible(Dictionary<int, decimal> recipe, 
