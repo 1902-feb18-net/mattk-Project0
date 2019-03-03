@@ -100,41 +100,44 @@ namespace Project0
             }
         }
 
-        //public static void OrderRecommended(List<Customer> customers, List<Order> orders)
-        //{
-        //    ILogger logger = LogManager.GetCurrentClassLogger();
+        public static void OrderRecommended(Project0Repo p0Repo)
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-        //    int customerId = GetCustomer(customers);
-        //    bool customerExists = Customer.CheckCustomerExists(customerId, customers);
-        //    if (!customerExists) { return; }
+            int customerId = GetCustomer(p0Repo);
+            if (!p0Repo.CheckCustomerExists(customerId)) { return; }
 
-        //    var customer = customers.Single(c => c.Id == customerId);
-        //    var customerOrders = orders.Where(o => o.OrderCustomer == customerId);
-        //    // https://stackoverflow.com/questions/6730974/select-most-frequent-value-using-linq
-        //    var mostFrequentOrder = customerOrders.GroupBy(o => o.OrderItem.Item1)
-        //                                            .OrderByDescending(gp => gp.Count())
-        //                                            .Take(1);
-        //    // https://code.i-harness.com/en/q/820541
-        //    var intermediate = mostFrequentOrder.First();
-        //    string orderRecommended = "not assigned";
-        //    foreach (var item in intermediate)
-        //    {
-        //        orderRecommended = item.OrderItem.Item1.ToString();
-        //        break;
-        //    }
+            var customers = p0Repo.GetAllCustomers().ToList();
+            var orders = p0Repo.GetAllOrders().ToList();
+            var cupcakes = p0Repo.GetAllCupcakes().ToList();
 
-        //    if (orderRecommended == "not assigned")
-        //    {
-        //        logger.Error($"Unable to find recommended order for customer {customer.FirstName}" +
-        //            $" {customer.LastName}");
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine($"Order recommended count: {mostFrequentOrder.Count()}");
-        //        Console.WriteLine($"Recommended Order for Customer {customer.FirstName}" +
-        //            $" {customer.LastName}: {orderRecommended}");
-        //    }
-        //}
+            var customer = customers.Single(c => c.Id == customerId);
+            var customerOrders = orders.Where(o => o.OrderCustomer == customerId);
+            // https://stackoverflow.com/questions/6730974/select-most-frequent-value-using-linq
+            var mostFrequentOrder = customerOrders.GroupBy(o => o.OrderCupcake)
+                                                    .OrderByDescending(gp => gp.Count())
+                                                    .Take(1);
+            // https://code.i-harness.com/en/q/820541
+            var intermediate = mostFrequentOrder.First();
+            string orderRecommended = "not assigned";
+            foreach (var item in intermediate)
+            {
+                orderRecommended = cupcakes.Single(c => c.Id == item.OrderCupcake).Type;
+                break;
+            }
+
+            if (orderRecommended == "not assigned")
+            {
+                logger.Error($"Unable to find recommended order for customer {customer.FirstName}" +
+                    $" {customer.LastName}");
+            }
+            else
+            {
+                Console.WriteLine($"Order recommended count: {mostFrequentOrder.Count()}");
+                Console.WriteLine($"Recommended Order for Customer {customer.FirstName}" +
+                    $" {customer.LastName}: {orderRecommended}");
+            }
+        }
 
         public static string GetCustomerFirstName()
         {

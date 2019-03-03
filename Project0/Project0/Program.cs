@@ -78,7 +78,7 @@ namespace Project0
                     }
                     else if (input == "OR")
                     {
-                        //ConsoleRead.OrderRecommended(customers, orders);
+                        ConsoleRead.OrderRecommended(p0Repo);
                     }
                     else if (input == "Q")
                     {
