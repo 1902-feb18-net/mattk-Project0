@@ -73,7 +73,8 @@ namespace Project0
                     }
                     else if (input == "OL")
                     {
-                        //ConsoleDisplay.OrderList(orders, storeLocations);
+                        ConsoleDisplay.OrderList(p0Repo, p0Repo.GetAllOrders().ToList(),
+                            p0Repo.GetAllCupcakes().ToList(), p0Repo.GetAllStoreLocations().ToList());
                     }
                     else if (input == "OR")
                     {

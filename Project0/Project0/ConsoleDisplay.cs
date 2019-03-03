@@ -52,7 +52,7 @@ namespace Project0
         }
 
         public static void OrderList(Project0Repo p0Repo, List<Library.Order> orders, 
-            List<Library.Cupcake> cupcakes, List<Location> storeLocations)
+            List<Library.Cupcake> cupcakes, List<Library.Location> storeLocations)
         {
             Console.WriteLine();
             Console.WriteLine("Please select from the following filters ('n' for no filter)");
@@ -106,7 +106,7 @@ namespace Project0
         }
 
         public static void DisplayOrders(Project0Repo p0Repo, List<Library.Order> orders,
-            List<Library.Cupcake> cupcakes, List<Location> storeLocations, string prompt)
+            List<Library.Cupcake> cupcakes, List<Library.Location> storeLocations, string prompt)
         {
             Console.WriteLine(prompt);
             Console.WriteLine();
@@ -128,8 +128,8 @@ namespace Project0
             if (!(storeLocations is null))
             {
                 var storeWithMostOrders = storeLocations.MaxBy(sL => 
-                p0Repo.GetLocationOrderHistory(sL.LocationId).Count()).First();
-                Console.WriteLine($"Store Id with the most orders: {storeWithMostOrders.LocationId}");
+                p0Repo.GetLocationOrderHistory(sL.Id).Count()).First();
+                Console.WriteLine($"Store Id with the most orders: {storeWithMostOrders.Id}");
             }
             Console.WriteLine();
         }
