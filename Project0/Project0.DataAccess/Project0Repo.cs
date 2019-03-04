@@ -80,6 +80,11 @@ namespace Project0.DataAccess
                 .First().OrderId;
         }
 
+        public Library.Order GetCupcakeOrder(int orderId)
+        {
+            return Mapper.Map(Context.CupcakeOrder.Single(co => co.OrderId == orderId));
+        }
+
         public Dictionary<int, decimal> GetRecipe(int cupcakeId)
         {
             Dictionary<int, decimal> recipe = new Dictionary<int, decimal>();
@@ -144,6 +149,11 @@ namespace Project0.DataAccess
         public bool CheckCupcakeExists(int cupcakeId)
         {
             return Context.Cupcake.Any(l => l.CupcakeId == cupcakeId);
+        }
+
+        public bool CheckOrderExists(int orderId)
+        {
+            return Context.CupcakeOrder.Any(l => l.OrderId == orderId);
         }
 
         public void UpdateLocationInv(int locationId, Dictionary<int, decimal> recipe, int qnty)

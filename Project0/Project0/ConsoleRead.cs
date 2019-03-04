@@ -12,6 +12,7 @@ namespace Project0
         public static void GetMenuInput(out string input)
         {
             input = Console.ReadLine().ToUpper();
+            Console.WriteLine();
         }
 
         public static void LocationOrders(IProject0Repo p0Repo)
@@ -22,10 +23,16 @@ namespace Project0
             {
                 return;
             }
+            if (!p0Repo.CheckLocationExists(locationId))
+            {
+                Console.WriteLine("This location is not in the system.");
+                return;
+            }
 
             var cupcakes = p0Repo.GetAllCupcakes().ToList();
             var locationOrderHistory = p0Repo.GetLocationOrderHistory(locationId).ToList();
             Console.WriteLine($"Store Location {locationId}");
+            Console.WriteLine();
             ConsoleDisplay.OrderList(p0Repo, locationOrderHistory, cupcakes, null);
         }
 
@@ -56,11 +63,13 @@ namespace Project0
                 if (numPossibleMatches > 0)
                 {
                     possibleMatches = customerList.Where(c => c.LastName == lName);
+                    Console.WriteLine();
                     Console.WriteLine("List of customer's with that first name and last name:");
+                    Console.WriteLine();
                     foreach (var item in possibleMatches)
                     {
                         Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
-                        $"Last Name, {item.LastName}, Default Store Id: {item.DefaultLocation}");
+                        $"Last Name, {item.LastName}, Default Location Id: {item.DefaultLocation}");
                     }
                 }
                 else
@@ -81,14 +90,21 @@ namespace Project0
             var customers = p0Repo.GetAllCustomers().ToList();
 
             ConsoleDisplay.CustomerList(p0Repo);
+            Console.WriteLine();
             Console.WriteLine("Please enter the customer Id to get that customer's orders:");
             var input = Console.ReadLine();
 
             if (int.TryParse(input, out var customerId))
             {
+                if (!p0Repo.CheckCustomerExists(customerId))
+                {
+                    logger.Error($"{customerId} is not in the list of customers.");
+                    return;
+                }
                 foreach (var item in customers.Where(c => c.Id == customerId))
                 {
                     Console.WriteLine($"Customer {item.FirstName} {item.LastName}");
+                    Console.WriteLine();
                     var customerOrderHistory = p0Repo.GetCustomerOrderHistory(customerId).ToList();
                     var cupcakes = p0Repo.GetAllCupcakes().ToList();
                     ConsoleDisplay.OrderList(p0Repo, customerOrderHistory, cupcakes, null);
@@ -112,30 +128,38 @@ namespace Project0
             var cupcakes = p0Repo.GetAllCupcakes().ToList();
 
             var customer = customers.Single(c => c.Id == customerId);
-            var customerOrders = orders.Where(o => o.OrderCustomer == customerId);
-            // https://stackoverflow.com/questions/6730974/select-most-frequent-value-using-linq
-            var mostFrequentOrder = customerOrders.GroupBy(o => o.OrderCupcake)
-                                                    .OrderByDescending(gp => gp.Count())
-                                                    .Take(1);
-            // https://code.i-harness.com/en/q/820541
-            var intermediate = mostFrequentOrder.First();
-            string orderRecommended = "not assigned";
-            foreach (var item in intermediate)
+            var customerOrders = orders.Where(o => o.OrderCustomer == customerId).ToList();
+            if (customerOrders.Count() > 0)
             {
-                orderRecommended = cupcakes.Single(c => c.Id == item.OrderCupcake).Type;
-                break;
-            }
+                // https://stackoverflow.com/questions/6730974/select-most-frequent-value-using-linq
+                var mostFrequentOrder = customerOrders.GroupBy(o => o.OrderCupcake)
+                                                        .OrderByDescending(gp => gp.Count())
+                                                        .Take(1);
+                // https://code.i-harness.com/en/q/820541
+                var intermediate = mostFrequentOrder.First();
+                string orderRecommended = "not assigned";
+                foreach (var item in intermediate)
+                {
+                    orderRecommended = cupcakes.Single(c => c.Id == item.OrderCupcake).Type;
+                    break;
+                }
 
-            if (orderRecommended == "not assigned")
-            {
-                logger.Error($"Unable to find recommended order for customer {customer.FirstName}" +
-                    $" {customer.LastName}");
+                if (orderRecommended == "not assigned")
+                {
+                    logger.Error($"Unable to find recommended order for customer {customer.FirstName}" +
+                        $" {customer.LastName}");
+                }
+                else
+                {
+                    Console.WriteLine($"Order recommended count: {mostFrequentOrder.Count()}");
+                    Console.WriteLine($"Recommended Order for Customer {customer.FirstName}" +
+                        $" {customer.LastName}: {orderRecommended}");
+                }
             }
             else
             {
-                Console.WriteLine($"Order recommended count: {mostFrequentOrder.Count()}");
-                Console.WriteLine($"Recommended Order for Customer {customer.FirstName}" +
-                    $" {customer.LastName}: {orderRecommended}");
+                logger.Error($"Unable to find recommended order for customer {customer.FirstName}" +
+                        $" {customer.LastName}");
             }
         }
 
@@ -178,6 +202,7 @@ namespace Project0
             ILogger logger = LogManager.GetCurrentClassLogger();
 
             ConsoleDisplay.LocationList(p0Repo);
+            Console.WriteLine();
             Console.WriteLine(prompt);
             var input = Console.ReadLine();
 
@@ -197,6 +222,7 @@ namespace Project0
             ILogger logger = LogManager.GetCurrentClassLogger();
 
             ConsoleDisplay.CustomerList(p0Repo);
+            Console.WriteLine();
             Console.WriteLine("Please enter a valid customer Id for the order:");
             var input = Console.ReadLine();
 
@@ -245,6 +271,29 @@ namespace Project0
             {
                 logger.Error($"Invalid input {input}");
                 return -1;
+            }
+        }
+
+        public static void OrderDetails(IProject0Repo p0Repo)
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            Console.WriteLine("Please enter an order Id:");
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out var orderId))
+            {
+                if (!p0Repo.CheckOrderExists(orderId))
+                {
+                    Console.WriteLine("That order is not in the system.");
+                }
+                else
+                {
+                    ConsoleDisplay.DisplayOrder(p0Repo.GetCupcakeOrder(orderId), p0Repo.GetAllCupcakes().ToList());
+                }
+            }
+            else
+            {
+                logger.Error($"Invalid input {input}");
             }
         }
     }

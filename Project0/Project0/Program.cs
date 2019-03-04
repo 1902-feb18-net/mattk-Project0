@@ -71,6 +71,10 @@ namespace Project0
                     {
                         ConsoleRead.CustomerOrders(p0Repo);
                     }
+                    else if (input == "OD")
+                    {
+                        ConsoleRead.OrderDetails(p0Repo);
+                    }
                     else if (input == "OL")
                     {
                         ConsoleDisplay.OrderList(p0Repo, p0Repo.GetAllOrders().ToList(),
@@ -102,6 +106,7 @@ namespace Project0
             if (fName is null) { return; }
             string lName = ConsoleRead.GetCustomerLastName();
             if (lName is null) { return; }
+            Console.WriteLine();
             var locations = p0Repo.GetAllLocations().ToList();
             if (locations.Count() <= 0)
             {
@@ -112,11 +117,15 @@ namespace Project0
             int locationId = ConsoleRead.GetLocation(p0Repo,
                 "Please enter a valid Id for default store location:");
             if (locationId == -1) { return; }
-            if (!p0Repo.CheckLocationExists(locationId)) { return; }
+            if (!p0Repo.CheckLocationExists(locationId))
+            {
+                Console.WriteLine("The store location that you entered is not in the system.");
+                return;
+            }
 
             p0Repo.AddCustomer(fName, lName, locationId);
             int newCustomerId = p0Repo.GetLastCustomerAdded();
-            Console.WriteLine($"Location with Id of {newCustomerId} successfully created!");
+            Console.WriteLine($"Customer with Id of {newCustomerId} successfully created!");
         }
 
         public static void GetDataAndAddOrder(IProject0Repo p0Repo)

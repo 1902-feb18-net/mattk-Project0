@@ -20,6 +20,7 @@ namespace Project0
             Console.WriteLine("'CL': Get a list of available customers and their information.");
             Console.WriteLine("'CS': Search for customers by name.");
             Console.WriteLine("'CO': Get a customer's order history.");
+            Console.WriteLine("'OD': Get order details for one order.");
             Console.WriteLine("'OL': Get a list of all orders that have been placed.");
             Console.WriteLine("'OR': Get a customer's recommended order.");
             Console.WriteLine();
@@ -35,7 +36,6 @@ namespace Project0
             {
                 Console.WriteLine($"Location Id: {item.Id}");
             }
-            Console.WriteLine();
         }
 
         public static void CustomerList(IProject0Repo p0Repo)
@@ -48,13 +48,11 @@ namespace Project0
                 Console.WriteLine($"Customer Id: {item.Id}, First Name: {item.FirstName}, " +
                     $"Last Name, {item.LastName}, Default Location Id: {item.DefaultLocation}");
             }
-            Console.WriteLine();
         }
 
         public static void OrderList(IProject0Repo p0Repo, List<Library.Order> orders, 
             List<Library.Cupcake> cupcakes, List<Library.Location> locations)
         {
-            Console.WriteLine();
             Console.WriteLine("Please select from the following filters ('n' for no filter)");
             Console.WriteLine("'E': Earliest orders first");
             Console.WriteLine("'L': Latest orders first");
@@ -119,19 +117,21 @@ namespace Project0
                 Console.WriteLine($"Order Id {item.Id} total cost: " +
                     $"${item.OrderQuantity * cupcakes.Single(c => c.Id == item.OrderCupcake).Cost}");
             }
-            Console.WriteLine();
-            Console.WriteLine("Other order statistics...:");
-            Console.WriteLine($"Average Order Cost: " +
-                $"{orders.Average(o => o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)}");
-            Console.WriteLine($"Order with the latest date: " +
-                $"{orders.Max(o => o.OrderTime)}");
-            if (!(locations is null))
+            if (orders.Count() > 0)
             {
-                var storeWithMostOrders = locations.MaxBy(sL => 
-                p0Repo.GetLocationOrderHistory(sL.Id).Count()).First();
-                Console.WriteLine($"Store Id with the most orders: {storeWithMostOrders.Id}");
+                Console.WriteLine();
+                Console.WriteLine("Other order statistics...");
+                Console.WriteLine($"Average Order Cost: " +
+                    $"${orders.Average(o => o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)}");
+                Console.WriteLine($"Order with the latest date: " +
+                    $"{orders.Max(o => o.OrderTime)}");
+                if (!(locations is null))
+                {
+                    var storeWithMostOrders = locations.MaxBy(sL =>
+                    p0Repo.GetLocationOrderHistory(sL.Id).Count()).First();
+                    Console.WriteLine($"Store Id with the most orders: {storeWithMostOrders.Id}");
+                }
             }
-            Console.WriteLine();
         }
 
         public static void CupcakeList(IProject0Repo p0Repo)
@@ -145,6 +145,16 @@ namespace Project0
             }
            
             Console.WriteLine();
+        }
+
+        public static void DisplayOrder(Library.Order order, List<Library.Cupcake> cupcakes)
+        {
+            Console.WriteLine($"Order Id: {order.Id}, Location Id: {order.OrderLocation}, " +
+                    $"Customer Id, {order.OrderCustomer}, Order Time: {order.OrderTime}, " +
+                    $"Order Item: {cupcakes.Single(c => c.Id == order.OrderCupcake).Type}, " +
+                    $"qnty: {order.OrderQuantity}");
+            Console.WriteLine($"Order Id {order.Id} total cost: " +
+                    $"${order.OrderQuantity * cupcakes.Single(c => c.Id == order.OrderCupcake).Cost}");
         }
 
     }
