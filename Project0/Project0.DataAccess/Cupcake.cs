@@ -7,7 +7,7 @@ namespace Project0.DataAccess
     {
         public Cupcake()
         {
-            CupcakeOrder = new HashSet<CupcakeOrder>();
+            CupcakeOrderItem = new HashSet<CupcakeOrderItem>();
             RecipeItem = new HashSet<RecipeItem>();
         }
 
@@ -15,7 +15,7 @@ namespace Project0.DataAccess
         public string Type { get; set; }
         public decimal Cost { get; set; }
 
-        public virtual ICollection<CupcakeOrder> CupcakeOrder { get; set; }
+        public virtual ICollection<CupcakeOrderItem> CupcakeOrderItem { get; set; }
         public virtual ICollection<RecipeItem> RecipeItem { get; set; }
     }
 }

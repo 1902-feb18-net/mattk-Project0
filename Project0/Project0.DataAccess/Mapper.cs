@@ -65,8 +65,6 @@ namespace Project0.DataAccess
             Id = order.OrderId,
             OrderLocation = order.LocationId,
             OrderCustomer = order.CustomerId,
-            OrderCupcake = order.CupcakeId,
-            OrderQuantity = order.Quantity,
             OrderTime = order.OrderTime
         };
         public static DataAccess.CupcakeOrder Map(Library.Order order) => new DataAccess.CupcakeOrder
@@ -74,8 +72,6 @@ namespace Project0.DataAccess
             OrderId = order.Id,
             LocationId = order.OrderLocation,
             CustomerId = order.OrderCustomer,
-            CupcakeId = order.OrderCupcake,
-            Quantity = order.OrderQuantity,
             OrderTime = order.OrderTime
         };
         public static IEnumerable<Library.Order> Map(IEnumerable<DataAccess.CupcakeOrder> orders) =>

@@ -51,8 +51,6 @@ namespace Project0.DataAccess
             {
                 LocationId = locationId,
                 CustomerId = customerId,
-                CupcakeId = cupcakeId,
-                Quantity = qnty,
                 OrderTime = DateTime.Now
             };
             Context.CupcakeOrder.Add(newOrder);

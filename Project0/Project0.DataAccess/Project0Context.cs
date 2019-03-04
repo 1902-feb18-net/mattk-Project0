@@ -17,11 +17,21 @@ namespace Project0.DataAccess
 
         public virtual DbSet<Cupcake> Cupcake { get; set; }
         public virtual DbSet<CupcakeOrder> CupcakeOrder { get; set; }
+        public virtual DbSet<CupcakeOrderItem> CupcakeOrderItem { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<Ingredient> Ingredient { get; set; }
         public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<LocationInventory> LocationInventory { get; set; }
         public virtual DbSet<RecipeItem> RecipeItem { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:kagel1902sql.database.windows.net,1433;Initial Catalog=Project0;Persist Security Info=False;User ID=mpkagel;Password=#7As8*uK;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,7 +42,7 @@ namespace Project0.DataAccess
                 entity.ToTable("Cupcake", "Project0");
 
                 entity.HasIndex(e => e.Type)
-                    .HasName("UQ__Cupcake__F9B8A48B93D23CB3")
+                    .HasName("UQ__Cupcake__F9B8A48B3355719A")
                     .IsUnique();
 
                 entity.Property(e => e.Cost)
@@ -47,21 +57,13 @@ namespace Project0.DataAccess
             modelBuilder.Entity<CupcakeOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__CupcakeO__C3905BCF46DCC657");
+                    .HasName("PK__CupcakeO__C3905BCF523A3A2C");
 
                 entity.ToTable("CupcakeOrder", "Project0");
-
-                entity.Property(e => e.CupcakeId).HasColumnName("CupcakeID");
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
                 entity.Property(e => e.LocationId).HasColumnName("LocationID");
-
-                entity.HasOne(d => d.Cupcake)
-                    .WithMany(p => p.CupcakeOrder)
-                    .HasForeignKey(d => d.CupcakeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Order_Cupcake");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.CupcakeOrder)
@@ -74,6 +76,31 @@ namespace Project0.DataAccess
                     .HasForeignKey(d => d.LocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_Location");
+            });
+
+            modelBuilder.Entity<CupcakeOrderItem>(entity =>
+            {
+                entity.ToTable("CupcakeOrderItem", "Project0");
+
+                entity.HasIndex(e => new { e.OrderId, e.CupcakeId })
+                    .HasName("OrderToCupcake")
+                    .IsUnique();
+
+                entity.Property(e => e.CupcakeId).HasColumnName("CupcakeID");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.HasOne(d => d.Cupcake)
+                    .WithMany(p => p.CupcakeOrderItem)
+                    .HasForeignKey(d => d.CupcakeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderItem_Cupcake");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.CupcakeOrderItem)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderItem_CupcakeOrder");
             });
 
             modelBuilder.Entity<Customer>(entity =>
@@ -100,7 +127,7 @@ namespace Project0.DataAccess
                 entity.ToTable("Ingredient", "Project0");
 
                 entity.HasIndex(e => e.Type)
-                    .HasName("UQ__Ingredie__F9B8A48BE7B0561E")
+                    .HasName("UQ__Ingredie__F9B8A48B23C4C7AB")
                     .IsUnique();
 
                 entity.Property(e => e.Type)
