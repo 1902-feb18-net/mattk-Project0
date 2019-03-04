@@ -18,7 +18,7 @@ namespace Project0
         public static void LocationOrders(IProject0Repo p0Repo)
         {
             int locationId = GetLocation(p0Repo,
-                "Please enter the store location Id to get that location's orders:");
+                "Please enter the store location Id to get that location's orders:", -1);
             if (locationId == -1)
             {
                 return;
@@ -132,7 +132,8 @@ namespace Project0
             if (customerOrders.Count() > 0)
             {
                 // https://stackoverflow.com/questions/6730974/select-most-frequent-value-using-linq
-                var mostFrequentOrder = customerOrders.GroupBy(o => o.OrderCupcake)
+                var mostFrequentOrder = customerOrders.OrderBy(o => o.OrderCupcake)
+                                                        .GroupBy(o => o.OrderCupcake)
                                                         .OrderByDescending(gp => gp.Count())
                                                         .Take(1);
                 // https://code.i-harness.com/en/q/820541
@@ -197,7 +198,7 @@ namespace Project0
             }
         }
 
-        public static int GetLocation(IProject0Repo p0Repo, string prompt)
+        public static int GetLocation(IProject0Repo p0Repo, string prompt, int customerId)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -206,7 +207,11 @@ namespace Project0
             Console.WriteLine(prompt);
             var input = Console.ReadLine();
 
-            if (int.TryParse(input, out var locationId))
+            if (input == "d" && customerId != -1)
+            {
+                return p0Repo.GetDefaultLocation(customerId);
+            }
+            else if (int.TryParse(input, out var locationId))
             {
                 return locationId;
             }
@@ -225,7 +230,7 @@ namespace Project0
             Console.WriteLine();
             Console.WriteLine("Please enter a valid customer Id for the order:");
             var input = Console.ReadLine();
-
+           
             if (int.TryParse(input, out var customerId))
             {
                 return customerId;

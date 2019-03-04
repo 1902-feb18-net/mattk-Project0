@@ -8,7 +8,6 @@ namespace Project0.Test
     public class OrderTest
     {
         [Theory]
-        [InlineData(0)]
         [InlineData(500)]
         [InlineData(499)]
         [InlineData(250)]
@@ -23,6 +22,7 @@ namespace Project0.Test
         [InlineData(501)]
         [InlineData(1000)]
         [InlineData(-500)]
+        [InlineData(0)]
         public void TestCheckCupcakeQuantityFalse(int qnty)
         {
             // Act and Assert

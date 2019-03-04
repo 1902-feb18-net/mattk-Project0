@@ -80,6 +80,11 @@ namespace Project0.DataAccess
                 .First().OrderId;
         }
 
+        public int GetDefaultLocation(int customerId)
+        {
+            return Context.Customer.Single(c => c.CustomerId == customerId).DefaultLocation;
+        }
+
         public Library.Order GetCupcakeOrder(int orderId)
         {
             return Mapper.Map(Context.CupcakeOrder.Single(co => co.OrderId == orderId));
@@ -104,7 +109,6 @@ namespace Project0.DataAccess
             }
             return locationInv;
         }
-
 
         public IEnumerable<Library.Location> GetAllLocations()
         {

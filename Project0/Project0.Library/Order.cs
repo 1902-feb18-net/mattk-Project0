@@ -13,7 +13,7 @@ namespace Project0.Library
 
         public static bool CheckCupcakeQuantity(int qnty)
         {
-            return qnty <= 500 && qnty >= 0;
+            return qnty <= 500 && qnty > 0;
         }
     }
 }

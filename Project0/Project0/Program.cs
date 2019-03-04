@@ -39,7 +39,7 @@ namespace Project0
                 {
                     ConsoleDisplay.DisplayMenu();
                     ConsoleRead.GetMenuInput(out var input);
-                    if (input == "S")
+                    if (input == "L")
                     {
                         GetDataAndAddLocation(p0Repo);
                     }
@@ -115,7 +115,7 @@ namespace Project0
             }
            
             int locationId = ConsoleRead.GetLocation(p0Repo,
-                "Please enter a valid Id for default store location:");
+                "Please enter a valid Id for default store location:", -1);
             if (locationId == -1) { return; }
             if (!p0Repo.CheckLocationExists(locationId))
             {
@@ -132,17 +132,6 @@ namespace Project0
         {
             NLog.ILogger logger = LogManager.GetCurrentClassLogger();
 
-            int locationId = ConsoleRead.GetLocation(p0Repo,
-                "Please enter a valid store Id for the order:");
-            if (locationId == -1)
-            {
-                return;
-            }
-            if (!p0Repo.CheckLocationExists(locationId))
-            {
-                logger.Error($"{locationId} is not in the list of stores.");
-                return;
-            }
             int customerId = ConsoleRead.GetCustomer(p0Repo);
             if (customerId == -1)
             {
@@ -151,6 +140,17 @@ namespace Project0
             if (!p0Repo.CheckCustomerExists(customerId))
             {
                 logger.Error($"{customerId} is not in the list of customers.");
+                return;
+            }
+            int locationId = ConsoleRead.GetLocation(p0Repo,
+                "Please enter a valid store Id for the order or 'd' for customer default:", customerId);
+            if (locationId == -1)
+            {
+                return;
+            }
+            if (!p0Repo.CheckLocationExists(locationId))
+            {
+                logger.Error($"{locationId} is not in the list of stores.");
                 return;
             }
             int cupcakeId = ConsoleRead.GetCupcake(p0Repo);

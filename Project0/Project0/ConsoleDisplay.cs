@@ -2,6 +2,7 @@
 using Project0.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -12,7 +13,7 @@ namespace Project0
         public static void DisplayMenu()
         {
             Console.WriteLine();
-            Console.WriteLine("'S': Add a store location to the database.");
+            Console.WriteLine("'L': Add a store location to the database.");
             Console.WriteLine("'C': Add a customer to the database.");
             Console.WriteLine("'O': Add an order to the database.");
             Console.WriteLine("'LL': Get a list of available store locations and their Id numbers.");
@@ -121,14 +122,14 @@ namespace Project0
             {
                 Console.WriteLine();
                 Console.WriteLine("Other order statistics...");
-                Console.WriteLine($"Average Order Cost: " +
-                    $"${orders.Average(o => o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)}");
+                Console.WriteLine($"Average Order Total: " +
+                    $"${orders.Average(o => o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost).ToString("#.00", CultureInfo.InvariantCulture)}");
                 Console.WriteLine($"Order with the latest date: " +
                     $"{orders.Max(o => o.OrderTime)}");
                 if (!(locations is null))
                 {
                     var storeWithMostOrders = locations.MaxBy(sL =>
-                    p0Repo.GetLocationOrderHistory(sL.Id).Count()).First();
+                    p0Repo.GetLocationOrderHistory(sL.Id).Count()).OrderBy(sL => sL.Id).First();
                     Console.WriteLine($"Store Id with the most orders: {storeWithMostOrders.Id}");
                 }
             }
