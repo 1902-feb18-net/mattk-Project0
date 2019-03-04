@@ -108,7 +108,7 @@ namespace Project0
             if (lName is null) { return; }
             Console.WriteLine();
             var locations = p0Repo.GetAllLocations().ToList();
-            if (locations.Count() <= 0)
+            if (locations.Count <= 0)
             {
                 Console.WriteLine("You must add at least one store location before you can add a customer.");
                 return;
@@ -170,7 +170,7 @@ namespace Project0
             }
             if (!Library.Order.CheckCupcakeQuantity(orderQnty))
             {
-                Console.WriteLine("Maximum order quantity is 500.");
+                Console.WriteLine("Order quantity must be between 1 and 500.");
                 return;
             }
             var orders = p0Repo.GetAllOrders().ToList();
