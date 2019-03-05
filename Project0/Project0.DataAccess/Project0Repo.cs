@@ -74,23 +74,17 @@ namespace Project0.DataAccess
 
         public int GetLastLocationAdded()
         {
-            return Context.Location
-                .OrderByDescending(x => x.LocationId)
-                .First().LocationId;
+            return Context.Location.OrderByDescending(x => x.LocationId).First().LocationId;
         }
 
         public int GetLastCustomerAdded()
         {
-            return Context.Customer
-                .OrderByDescending(x => x.CustomerId)
-                .First().CustomerId;
+            return Context.Customer.OrderByDescending(x => x.CustomerId).First().CustomerId;
         }
 
         public int GetLastCupcakeOrderAdded()
         {
-            return Context.CupcakeOrder
-                .OrderByDescending(x => x.OrderId)
-                .First().OrderId;
+            return Context.CupcakeOrder.OrderByDescending(x => x.OrderId).First().OrderId;
         }
 
         public int GetDefaultLocation(int customerId)
@@ -112,6 +106,7 @@ namespace Project0.DataAccess
         {
             Dictionary<int, Dictionary<int, decimal>> recipes = new Dictionary<int, Dictionary<int, decimal>>();
 
+            // Get each recipe for each cupcake that is in the order
             foreach (var item in cupcakeInputs)
             {
                 Dictionary<int, decimal> recipe = new Dictionary<int, decimal>();
@@ -206,6 +201,10 @@ namespace Project0.DataAccess
         public void UpdateLocationInv(int locationId, Dictionary<int, Dictionary<int, decimal>> recipes,
             Dictionary<int, int> cupcakeInputs)
         {
+            // For each cupcake in the order, take that cupcake recipe and cupcake qnty, and subtract
+            // the order ingredient amounts required from the store location's inventory.
+            // The store location should already have been checked to make sure that its inventory
+            // will not go negative from the order.
             foreach (var locationInv in Context.LocationInventory.Where(li => li.LocationId == locationId))
             {
                 foreach (var cupcake in cupcakeInputs)
@@ -215,6 +214,5 @@ namespace Project0.DataAccess
             }
             Context.SaveChanges();
         }
-
     }
 }

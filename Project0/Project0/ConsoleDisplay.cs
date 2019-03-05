@@ -54,7 +54,7 @@ namespace Project0
         public static void OrderList(IProject0Repo p0Repo, List<Library.Order> orders,
             List<Library.OrderItem> orderItems, List<Library.Cupcake> cupcakes, List<Library.Location> locations)
         {
-            Console.WriteLine("Please select from the following filters ('n' for no filter)");
+            Console.WriteLine("Please select from the following filters ('N' for no filter)");
             Console.WriteLine("'E': Earliest orders first");
             Console.WriteLine("'L': Latest orders first");
             Console.WriteLine("'C': Cheapest orders first");
@@ -126,6 +126,7 @@ namespace Project0
                         $"{cupcakes.Single(c => c.Id == orderItem.CupcakeId).Type}, \n" +
                     $"\tQnty {incrementer}: {orderItem.Quantity}");
                     incrementer++;
+                    // Add to the sum for order total and order average
                     sum += orderItem.Quantity * cupcakes.Single(c => c.Id == orderItem.CupcakeId).Cost;
                 }
                     
@@ -139,6 +140,7 @@ namespace Project0
             {
                 avg /= orders.Count();
                 // https://stackoverflow.com/questions/1291483/leave-only-two-decimal-places-after-the-dot
+                // This takes the decimal average and stringifys it to two decimal places
                 string avgString = String.Format("{0:0.00}", avg);
                 Console.WriteLine("Other order statistics...");
                 Console.WriteLine($"Average Order Total: " +

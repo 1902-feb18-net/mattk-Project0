@@ -19,6 +19,7 @@ namespace Project0
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
+            // Get location 
             int locationId = GetLocation(p0Repo,
                 "Please enter the store location Id to get that location's orders:", -1);
             if (locationId == -1)
@@ -31,11 +32,15 @@ namespace Project0
                 return;
             }
 
+            // Get all cupcakes 
             var cupcakes = p0Repo.GetAllCupcakes().ToList();
+            // Get specific location orders
             var locationOrderHistory = p0Repo.GetLocationOrderHistory(locationId).ToList();
+            // Get all order items
             var orderItems = p0Repo.GetAllOrderItems().ToList();
             Console.WriteLine($"Store Location {locationId}");
             Console.WriteLine();
+            // Send all information to OrderList to display the orders
             ConsoleDisplay.OrderList(p0Repo, locationOrderHistory, orderItems, cupcakes, null);
         }
 
@@ -48,6 +53,7 @@ namespace Project0
 
             List<Library.Customer> customers = p0Repo.GetAllCustomers().ToList();
 
+            // Try to find a match to the first name
             var numPossibleMatches = customers.Count(c => c.FirstName == fName);
             if (numPossibleMatches > 0)
             {
@@ -61,7 +67,7 @@ namespace Project0
 
                 string lName = GetCustomerLastName();
                 if (lName is null) { return; }
-
+                // Try to find a match to the last name
                 numPossibleMatches = customerList.Count(c => c.LastName == lName);
                 if (numPossibleMatches > 0)
                 {
@@ -90,6 +96,7 @@ namespace Project0
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
+            // Get all customers
             var customers = p0Repo.GetAllCustomers().ToList();
 
             ConsoleDisplay.CustomerList(p0Repo);
@@ -108,9 +115,13 @@ namespace Project0
                 {
                     Console.WriteLine($"Customer {item.FirstName} {item.LastName}");
                     Console.WriteLine();
+                    // Get specific customer's orders
                     var customerOrderHistory = p0Repo.GetCustomerOrderHistory(customerId).ToList();
+                    // Get all cupcakes
                     var cupcakes = p0Repo.GetAllCupcakes().ToList();
+                    // Get all order items
                     var orderItems = p0Repo.GetAllOrderItems().ToList();
+                    // Send information to OrderList to be displayed
                     ConsoleDisplay.OrderList(p0Repo, customerOrderHistory, orderItems, cupcakes, null);
                 }
             }
@@ -135,6 +146,7 @@ namespace Project0
             if (customerOrderItems.Count() > 0)
             {
                 // https://stackoverflow.com/questions/6730974/select-most-frequent-value-using-linq
+                // Get the most frequent order, if there is a tie, then lowest Id wins
                 var mostFrequentOrder = customerOrderItems.OrderBy(o => o.CupcakeId)
                                                         .GroupBy(o => o.CupcakeId)
                                                         .OrderByDescending(gp => gp.Count())
@@ -288,6 +300,9 @@ namespace Project0
                                 cupcakeInputs.Clear();
                                 return cupcakeInputs;
                             }
+                            // Remove cupcake from the temporary list of cupcakes
+                            // to deter the user from re-entering it. If they re-enter it anyway
+                            // they will get an error.
                             cupcakes.Remove(cupcakes.Single(c => c.Id == cupcakeId));
                         }
                     }

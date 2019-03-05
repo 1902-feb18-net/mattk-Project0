@@ -16,12 +16,15 @@ namespace Project0.Library
             int sum = 0;
             foreach (var item in cupcakeInputs)
             {
+                // Get orders at store location
                 var ordersAtStore = orders.Where(o => o.OrderLocation == locationId);
+                // Get store location orders and find the ones within the past 24 hours
                 var ordersAtStoreRecently =
                     ordersAtStore.Where(o =>
                     Math.Abs(o.OrderTime.Subtract(DateTime.Now).TotalMinutes) < 1440);
                 foreach (var order in ordersAtStoreRecently)
                 {
+                    // Find the quantity of cupcakes in each order in the past 24 hours
                     var thisOrderItems = orderItems.Where(oi => oi.OrderId == order.Id);
                     foreach (var orderItem in thisOrderItems)
                     {
@@ -32,6 +35,9 @@ namespace Project0.Library
                     }
                 }
 
+                // If any of the cupcakes in the order have been exhausted: have orders causing
+                // the quantity ordered to exceed 1000 in the past 24 hours, then the order
+                // can't be placed.
                 result = sum < 1000;
                 sum = 0;
             }
