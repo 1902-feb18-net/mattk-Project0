@@ -15,6 +15,7 @@ namespace Project0.DataAccess
         int GetLastCustomerAdded();
         int GetLastCupcakeOrderAdded();
         Library.Order GetCupcakeOrder(int orderId);
+        Library.Cupcake GetCupcake(int cupcakeId);
         int GetDefaultLocation(int customerId);
         Dictionary<int, Dictionary<int, decimal>> GetRecipes(Dictionary<int, int> cupcakeInputs);
         Dictionary<int, decimal> GetLocationInv(int locationId);

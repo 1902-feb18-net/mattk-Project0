@@ -270,20 +270,29 @@ namespace Project0
                         if (!p0Repo.CheckCupcakeExists(cupcakeId))
                         {
                             logger.Error($"{cupcakeId} is not in the list of cupcakes.");
-                            foreach (var item in cupcakeInputs) { cupcakeInputs.Clear(); }
+                            cupcakeInputs.Clear();
                             return cupcakeInputs;
                         }
-                        cupcakeInputs[cupcakeId] = GetCupcakeQuantity();
-                        if (cupcakeInputs[cupcakeId] == -1)
+                        if (cupcakeInputs.ContainsKey(cupcakeId))
                         {
-                            foreach (var item in cupcakeInputs) { cupcakeInputs.Clear(); }
-                            return cupcakeInputs;
+                            Console.WriteLine("You have already selected that cupcake in this order.");
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            cupcakeInputs[cupcakeId] = GetCupcakeQuantity();
+                            if (cupcakeInputs[cupcakeId] == -1)
+                            {
+                                cupcakeInputs.Clear();
+                                return cupcakeInputs;
+                            }
+                            cupcakes.Remove(cupcakes.Single(c => c.Id == cupcakeId));
                         }
                     }
                     else
                     {
                         logger.Error($"Invalid input {input}");
-                        foreach (var item in cupcakeInputs) { cupcakeInputs.Clear(); }
+                        cupcakeInputs.Clear();
                         return cupcakeInputs;
                     }
                 }

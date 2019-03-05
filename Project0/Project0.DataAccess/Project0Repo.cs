@@ -103,6 +103,11 @@ namespace Project0.DataAccess
             return Mapper.Map(Context.CupcakeOrder.Single(co => co.OrderId == orderId));
         }
 
+        public Library.Cupcake GetCupcake(int cupcakeId)
+        {
+            return Mapper.Map(Context.Cupcake.Single(c => c.CupcakeId == cupcakeId));
+        }
+
         public Dictionary<int, Dictionary<int, decimal>> GetRecipes(Dictionary<int, int> cupcakeInputs)
         {
             Dictionary<int, Dictionary<int, decimal>> recipes = new Dictionary<int, Dictionary<int, decimal>>();

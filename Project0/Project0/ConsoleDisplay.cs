@@ -136,9 +136,11 @@ namespace Project0
             if (orders.Count() > 0)
             {
                 avg /= orders.Count();
+                // https://stackoverflow.com/questions/1291483/leave-only-two-decimal-places-after-the-dot
+                string avgString = String.Format("{0:0.00}", avg);
                 Console.WriteLine("Other order statistics...");
                 Console.WriteLine($"Average Order Total: " +
-                    $"${avg}");
+                    $"${avgString}");
                 Console.WriteLine($"Order with the latest date: " +
                     $"{orders.Max(o => o.OrderTime)}");
                 if (!(locations is null))
@@ -152,7 +154,7 @@ namespace Project0
 
         public static void CupcakeList(List<Library.Cupcake> cupcakes)
         {
-            Console.WriteLine("List of Cupcakes:");
+            Console.WriteLine("List of Cupcakes (available to add to order):");
             Console.WriteLine();
             foreach (var item in cupcakes)
             {

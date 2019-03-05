@@ -33,6 +33,7 @@ namespace Project0.Library
                 }
 
                 result = sum < 1000;
+                sum = 0;
             }
             return result;           
         }
@@ -40,16 +41,15 @@ namespace Project0.Library
         public static bool CheckOrderFeasible(Dictionary<int, Dictionary<int, decimal>> recipes, 
             Dictionary<int, decimal> locationInv, Dictionary<int, int> cupcakeInputs)
         {
-            Dictionary<int, decimal> inventoryCopy = new Dictionary<int, decimal>(locationInv);
             foreach (var cupcake in cupcakeInputs)
             {
-                foreach (var ingredient in locationInv)
+                foreach (var ingredient in locationInv.ToList())
                 {
-                    inventoryCopy[cupcake.Key] -= recipes[cupcake.Key][ingredient.Key] * cupcake.Value;
+                    locationInv[ingredient.Key] -= recipes[cupcake.Key][ingredient.Key] * cupcake.Value;
                 }
             }
 
-            foreach (var item in inventoryCopy)
+            foreach (var item in locationInv)
             {
                 if (locationInv[item.Key] < 0)
                 {

@@ -21,8 +21,6 @@ namespace Project0.Test
                     Id = 1,
                     OrderLocation = 1,
                     OrderCustomer = 1,
-                    OrderCupcake = 1,
-                    OrderQuantity = 999,
                     OrderTime = DateTime.Now.AddMinutes(-121)
                 }
             };
@@ -46,8 +44,6 @@ namespace Project0.Test
                     Id = 1,
                     OrderLocation = 1,
                     OrderCustomer = 1,
-                    OrderCupcake = 1,
-                    OrderQuantity = 999,
                     OrderTime = DateTime.Now
                 }
             };
