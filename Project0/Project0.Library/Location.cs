@@ -9,25 +9,49 @@ namespace Project0.Library
     {
         public int Id { get; set; }
 
-        public static bool CheckCanOrderCupcake(int locationId, int cupcakeId, List<Order> orders)
+        public static bool CheckCanOrderCupcake(int locationId, 
+            Dictionary<int, int> cupcakeInputs, List<Order> orders, List<OrderItem> orderItems)
         {
-            var ordersAtStore = orders.Where(o => o.OrderLocation == locationId);
-            var ordersAtStoreRecently =
-                ordersAtStore.Where(o =>
-                Math.Abs(o.OrderTime.Subtract(DateTime.Now).TotalMinutes) < 1440);
-            var ordersAtStoreRecentlyWithCupcake =
-                ordersAtStoreRecently.Where(o => o.OrderCupcake == cupcakeId);
-            int sum = ordersAtStoreRecentlyWithCupcake.Sum(o => o.OrderQuantity);
+            bool result = false;
+            int sum = 0;
+            foreach (var item in cupcakeInputs)
+            {
+                var ordersAtStore = orders.Where(o => o.OrderLocation == locationId);
+                var ordersAtStoreRecently =
+                    ordersAtStore.Where(o =>
+                    Math.Abs(o.OrderTime.Subtract(DateTime.Now).TotalMinutes) < 1440);
+                foreach (var order in ordersAtStoreRecently)
+                {
+                    var thisOrderItems = orderItems.Where(oi => oi.OrderId == order.Id);
+                    foreach (var orderItem in thisOrderItems)
+                    {
+                        if (orderItem.CupcakeId == item.Key)
+                        {
+                            sum += orderItem.Quantity;
+                        }
+                    }
+                }
 
-            return sum < 1000;
+                result = sum < 1000;
+            }
+            return result;           
         }
 
-        public static bool CheckOrderFeasible(Dictionary<int, decimal> recipe, 
-            Dictionary<int, decimal> locationInv, int qnty)
+        public static bool CheckOrderFeasible(Dictionary<int, Dictionary<int, decimal>> recipes, 
+            Dictionary<int, decimal> locationInv, Dictionary<int, int> cupcakeInputs)
         {
-            foreach (var item in locationInv)
+            Dictionary<int, decimal> inventoryCopy = new Dictionary<int, decimal>(locationInv);
+            foreach (var cupcake in cupcakeInputs)
             {
-                if (locationInv[item.Key] < recipe[item.Key] * qnty)
+                foreach (var ingredient in locationInv)
+                {
+                    inventoryCopy[cupcake.Key] -= recipes[cupcake.Key][ingredient.Key] * cupcake.Value;
+                }
+            }
+
+            foreach (var item in inventoryCopy)
+            {
+                if (locationInv[item.Key] < 0)
                 {
                     return false;
                 }

@@ -45,7 +45,7 @@ namespace Project0.DataAccess
             Context.SaveChanges();
         }
 
-        public void AddCupcakeOrder(int locationId, int customerId, int cupcakeId, int qnty)
+        public void AddCupcakeOrder(int locationId, int customerId)
         {
             var newOrder = new CupcakeOrder
             {
@@ -54,6 +54,21 @@ namespace Project0.DataAccess
                 OrderTime = DateTime.Now
             };
             Context.CupcakeOrder.Add(newOrder);
+            Context.SaveChanges();
+        }
+
+        public void AddCupcakeOrderItems(int orderId, Dictionary<int, int> cupcakeInputs)
+        {
+            foreach (var cupcake in cupcakeInputs)
+            {
+                var newOrderItem = new CupcakeOrderItem
+                {
+                    OrderId = orderId,
+                    CupcakeId = cupcake.Key,
+                    Quantity = cupcake.Value
+                };
+                Context.CupcakeOrderItem.Add(newOrderItem);
+            }
             Context.SaveChanges();
         }
 
@@ -88,14 +103,21 @@ namespace Project0.DataAccess
             return Mapper.Map(Context.CupcakeOrder.Single(co => co.OrderId == orderId));
         }
 
-        public Dictionary<int, decimal> GetRecipe(int cupcakeId)
+        public Dictionary<int, Dictionary<int, decimal>> GetRecipes(Dictionary<int, int> cupcakeInputs)
         {
-            Dictionary<int, decimal> recipe = new Dictionary<int, decimal>();
-            foreach (var item in Context.RecipeItem.Where(r => r.CupcakeId == cupcakeId).ToList())
+            Dictionary<int, Dictionary<int, decimal>> recipes = new Dictionary<int, Dictionary<int, decimal>>();
+
+            foreach (var item in cupcakeInputs)
             {
-                recipe[item.IngredientId] = item.Amount;
+                Dictionary<int, decimal> recipe = new Dictionary<int, decimal>();
+                foreach (var recipeItem in Context.RecipeItem.Where(r => r.CupcakeId == item.Key).ToList())
+                {
+                    recipe[recipeItem.IngredientId] = recipeItem.Amount;
+                }
+                recipes[item.Key] = recipe;
             }
-            return recipe;
+
+            return recipes;
         }
 
         public Dictionary<int, decimal> GetLocationInv(int locationId)
@@ -128,6 +150,11 @@ namespace Project0.DataAccess
             return Mapper.Map(Context.CupcakeOrder.ToList());
         }
 
+        public IEnumerable<Library.OrderItem> GetAllOrderItems()
+        {
+            return Mapper.Map(Context.CupcakeOrderItem.ToList());
+        }
+
         public IEnumerable<Library.Order> GetLocationOrderHistory(int locationId)
         {
             return Mapper.Map(Context.CupcakeOrder.Where(co => co.LocationId == locationId).ToList());
@@ -136,6 +163,19 @@ namespace Project0.DataAccess
         public IEnumerable<Library.Order> GetCustomerOrderHistory(int customerId)
         {
             return Mapper.Map(Context.CupcakeOrder.Where(co => co.CustomerId == customerId).ToList());
+        }
+
+        public IEnumerable<Library.OrderItem> GetOrderItems(int orderId)
+        {
+            return Mapper.Map(Context.CupcakeOrderItem.Where(coi => coi.OrderId == orderId));
+        }
+
+        public IEnumerable<Library.OrderItem> GetCustomerOrderItems(int customerId)
+        {
+            var customerOrders = Context.CupcakeOrder.Where(co => co.CustomerId == customerId)
+                .Select(co => co.OrderId)
+                .ToList();
+            return Mapper.Map(Context.CupcakeOrderItem.Where(coi => customerOrders.Contains(coi.OrderId)));
         }
 
         public bool CheckLocationExists(int locationId)
@@ -158,11 +198,15 @@ namespace Project0.DataAccess
             return Context.CupcakeOrder.Any(l => l.OrderId == orderId);
         }
 
-        public void UpdateLocationInv(int locationId, Dictionary<int, decimal> recipe, int qnty)
+        public void UpdateLocationInv(int locationId, Dictionary<int, Dictionary<int, decimal>> recipes,
+            Dictionary<int, int> cupcakeInputs)
         {
             foreach (var locationInv in Context.LocationInventory.Where(li => li.LocationId == locationId))
             {
-                locationInv.Amount -= recipe[locationInv.IngredientId] * qnty;
+                foreach (var cupcake in cupcakeInputs)
+                {
+                    locationInv.Amount -= recipes[cupcake.Key][locationInv.IngredientId] * cupcake.Value;
+                }
             }
             Context.SaveChanges();
         }

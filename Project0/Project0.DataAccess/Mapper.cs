@@ -79,5 +79,24 @@ namespace Project0.DataAccess
         public static IEnumerable<DataAccess.CupcakeOrder> Map(IEnumerable<Library.Order> orders) =>
             orders.Select(Map);
 
+        // CupcakeOrderItem
+        public static Library.OrderItem Map(DataAccess.CupcakeOrderItem orderItem) => new Library.OrderItem
+        {
+            Id = orderItem.CupcakeOrderItemId,
+            OrderId = orderItem.OrderId,
+            CupcakeId = orderItem.CupcakeId,
+            Quantity = orderItem.Quantity
+        };
+        public static DataAccess.CupcakeOrderItem Map(Library.OrderItem orderItem) => new DataAccess.CupcakeOrderItem
+        {
+            CupcakeOrderItemId = orderItem.Id,
+            OrderId = orderItem.OrderId,
+            CupcakeId = orderItem.CupcakeId,
+            Quantity = orderItem.Quantity
+        };
+        public static IEnumerable<Library.OrderItem> Map(IEnumerable<DataAccess.CupcakeOrderItem> orderItems) =>
+            orderItems.Select(Map);
+        public static IEnumerable<DataAccess.CupcakeOrderItem> Map(IEnumerable<Library.OrderItem> orderItems) =>
+            orderItems.Select(Map);
     }
 }

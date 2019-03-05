@@ -51,8 +51,8 @@ namespace Project0
             }
         }
 
-        public static void OrderList(IProject0Repo p0Repo, List<Library.Order> orders, 
-            List<Library.Cupcake> cupcakes, List<Library.Location> locations)
+        public static void OrderList(IProject0Repo p0Repo, List<Library.Order> orders,
+            List<Library.OrderItem> orderItems, List<Library.Cupcake> cupcakes, List<Library.Location> locations)
         {
             Console.WriteLine("Please select from the following filters ('n' for no filter)");
             Console.WriteLine("'E': Earliest orders first");
@@ -70,7 +70,7 @@ namespace Project0
                 {
                     modOrders.Add(item);
                 }
-                DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (earliest to latest):");
+                DisplayOrders(p0Repo, modOrders, orderItems, cupcakes, locations, "List of Orders (earliest to latest):");
             }
             else if (input == "L")
             {
@@ -78,52 +78,67 @@ namespace Project0
                 {
                     modOrders.Add(item);
                 }
-                DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (latest to earliest):");
+                DisplayOrders(p0Repo, modOrders, orderItems, cupcakes, locations, "List of Orders (latest to earliest):");
             }
             else if (input == "C")
             {
                 foreach (var item in orders.OrderBy(o => 
-                        (o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)))
+                o.GetTotalCost(p0Repo.GetOrderItems(o.Id).ToList(), cupcakes)))
                 {
                     modOrders.Add(item);
                 }
-                DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (cheapest to most expensive):");
+                DisplayOrders(p0Repo, modOrders, orderItems, cupcakes, locations, "List of Orders (cheapest to most expensive):");
             }
             else if (input == "X")
             {
-                foreach (var item in orders.OrderByDescending(o =>
-                        (o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)))
-                {
-                    modOrders.Add(item);
-                }
-                DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (most expensive to cheapest):");
+                //foreach (var item in orders.OrderByDescending(o =>
+                //        (o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)))
+                //{
+                //    modOrders.Add(item);
+                //}
+                //DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (most expensive to cheapest):");
             }
             else
             {
-                DisplayOrders(p0Repo, orders, cupcakes, locations, "List of Orders:");
+                DisplayOrders(p0Repo, orders, orderItems, cupcakes, locations, "List of Orders:");
             }
         }
 
         public static void DisplayOrders(IProject0Repo p0Repo, List<Library.Order> orders,
+            List<Library.OrderItem> orderItems,
             List<Library.Cupcake> cupcakes, List<Library.Location> locations, string prompt)
         {
             Console.WriteLine(prompt);
             Console.WriteLine();
+            decimal sum = 0;
+            decimal avg = 0;
+            int incrementer = 1;
             foreach (var item in orders)
             {
                 Console.WriteLine($"Order Id: {item.Id}, Location Id: {item.OrderLocation}, " +
-                    $"Customer Id, {item.OrderCustomer}, Order Time: {item.OrderTime}, " +
-                    $"Order Item: {cupcakes.Single(c => c.Id == item.OrderCupcake).Type}, " +
-                    $"qnty: {item.OrderQuantity}");
-                Console.WriteLine($"Order Id {item.Id} total cost: " +
-                    $"${item.OrderQuantity * cupcakes.Single(c => c.Id == item.OrderCupcake).Cost}");
+                    $"Customer Id, {item.OrderCustomer}, Order Time: {item.OrderTime},");
+                List<Library.OrderItem> thisOrderItems = p0Repo.GetOrderItems(item.Id).ToList();
+                foreach (var orderItem in thisOrderItems)
+                {
+                    Console.WriteLine($"\tOrder Item {incrementer}: " +
+                        $"{cupcakes.Single(c => c.Id == orderItem.CupcakeId).Type}, \n" +
+                    $"\tQnty {incrementer}: {orderItem.Quantity}");
+                    incrementer++;
+                    sum += orderItem.Quantity * cupcakes.Single(c => c.Id == orderItem.CupcakeId).Cost;
+                }
+                    
+                Console.WriteLine($"Order Id {item.Id} total cost: ${sum}");
+                avg += sum;
+                sum = 0;
+                incrementer = 1;
+                Console.WriteLine();
             }
             if (orders.Count() > 0)
             {
-                Console.WriteLine();
+                avg /= orders.Count();
                 Console.WriteLine("Other order statistics...");
                 Console.WriteLine($"Average Order Total: " +
-                    $"${orders.Average(o => o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost).ToString("#.00", CultureInfo.InvariantCulture)}");
+                    $"${avg}");
                 Console.WriteLine($"Order with the latest date: " +
                     $"{orders.Max(o => o.OrderTime)}");
                 if (!(locations is null))
@@ -135,11 +150,10 @@ namespace Project0
             }
         }
 
-        public static void CupcakeList(IProject0Repo p0Repo)
+        public static void CupcakeList(List<Library.Cupcake> cupcakes)
         {
             Console.WriteLine("List of Cupcakes:");
             Console.WriteLine();
-            var cupcakes = p0Repo.GetAllCupcakes();
             foreach (var item in cupcakes)
             {
                 Console.WriteLine($"{item.Id}: {item.Type}");
@@ -148,15 +162,24 @@ namespace Project0
             Console.WriteLine();
         }
 
-        public static void DisplayOrder(Library.Order order, List<Library.Cupcake> cupcakes)
+        public static void DisplayOrder(Library.Order order, List<Library.OrderItem> orderItems,
+            List<Library.Cupcake> cupcakes)
         {
+            decimal sum = 0;
+            int incrementer = 1;
             Console.WriteLine($"Order Id: {order.Id}, Location Id: {order.OrderLocation}, " +
-                    $"Customer Id, {order.OrderCustomer}, Order Time: {order.OrderTime}, " +
-                    $"Order Item: {cupcakes.Single(c => c.Id == order.OrderCupcake).Type}, " +
-                    $"qnty: {order.OrderQuantity}");
-            Console.WriteLine($"Order Id {order.Id} total cost: " +
-                    $"${order.OrderQuantity * cupcakes.Single(c => c.Id == order.OrderCupcake).Cost}");
-        }
+                    $"Customer Id, {order.OrderCustomer}, Order Time: {order.OrderTime},");
+            foreach (var orderItem in orderItems)
+            {
+                Console.WriteLine($"\tOrder Item {incrementer}: " +
+                    $"{cupcakes.Single(c => c.Id == orderItem.CupcakeId).Type}, \n" +
+                $"\tQnty {incrementer}: {orderItem.Quantity}");
+                incrementer++;
+                sum += orderItem.Quantity * cupcakes.Single(c => c.Id == orderItem.CupcakeId).Cost;
+            }
 
+            Console.WriteLine($"Order Id {order.Id} total cost: ${sum}");
+            Console.WriteLine();
+        }
     }
 }

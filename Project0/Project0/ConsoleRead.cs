@@ -31,9 +31,10 @@ namespace Project0
 
             var cupcakes = p0Repo.GetAllCupcakes().ToList();
             var locationOrderHistory = p0Repo.GetLocationOrderHistory(locationId).ToList();
+            var orderItems = p0Repo.GetAllOrderItems().ToList();
             Console.WriteLine($"Store Location {locationId}");
             Console.WriteLine();
-            ConsoleDisplay.OrderList(p0Repo, locationOrderHistory, cupcakes, null);
+            ConsoleDisplay.OrderList(p0Repo, locationOrderHistory, orderItems, cupcakes, null);
         }
 
         public static void CustomerSearch(IProject0Repo p0Repo)
@@ -107,7 +108,8 @@ namespace Project0
                     Console.WriteLine();
                     var customerOrderHistory = p0Repo.GetCustomerOrderHistory(customerId).ToList();
                     var cupcakes = p0Repo.GetAllCupcakes().ToList();
-                    ConsoleDisplay.OrderList(p0Repo, customerOrderHistory, cupcakes, null);
+                    var orderItems = p0Repo.GetAllOrderItems().ToList();
+                    ConsoleDisplay.OrderList(p0Repo, customerOrderHistory, orderItems, cupcakes, null);
                 }
             }
             else
@@ -123,17 +125,16 @@ namespace Project0
             int customerId = GetCustomer(p0Repo);
             if (!p0Repo.CheckCustomerExists(customerId)) { return; }
 
-            var customers = p0Repo.GetAllCustomers().ToList();
-            var orders = p0Repo.GetAllOrders().ToList();
+            var customer = p0Repo.GetAllCustomers().ToList().Single(c => c.Id == customerId);
+            var orderItems = p0Repo.GetAllOrderItems().ToList();
             var cupcakes = p0Repo.GetAllCupcakes().ToList();
 
-            var customer = customers.Single(c => c.Id == customerId);
-            var customerOrders = orders.Where(o => o.OrderCustomer == customerId).ToList();
-            if (customerOrders.Count() > 0)
+            var customerOrderItems = p0Repo.GetCustomerOrderItems(customerId).ToList();
+            if (customerOrderItems.Count() > 0)
             {
                 // https://stackoverflow.com/questions/6730974/select-most-frequent-value-using-linq
-                var mostFrequentOrder = customerOrders.OrderBy(o => o.OrderCupcake)
-                                                        .GroupBy(o => o.OrderCupcake)
+                var mostFrequentOrder = customerOrderItems.OrderBy(o => o.CupcakeId)
+                                                        .GroupBy(o => o.CupcakeId)
                                                         .OrderByDescending(gp => gp.Count())
                                                         .Take(1);
                 // https://code.i-harness.com/en/q/820541
@@ -141,7 +142,7 @@ namespace Project0
                 string orderRecommended = "not assigned";
                 foreach (var item in intermediate)
                 {
-                    orderRecommended = cupcakes.Single(c => c.Id == item.OrderCupcake).Type;
+                    orderRecommended = cupcakes.Single(c => c.Id == item.CupcakeId).Type;
                     break;
                 }
 
@@ -242,23 +243,52 @@ namespace Project0
             }
         }
 
-        public static int GetCupcake(IProject0Repo p0Repo)
+        public static Dictionary<int, int> GetCupcakes(IProject0Repo p0Repo)
         {
             ILogger logger = LogManager.GetCurrentClassLogger();
 
-            ConsoleDisplay.CupcakeList(p0Repo);
-            Console.WriteLine("Please enter the number of a cupcake as it appears on the list:");
-            var input = Console.ReadLine();
+            List<Library.Cupcake> cupcakes = p0Repo.GetAllCupcakes().ToList();
+            string input;
+            Dictionary<int, int> cupcakeInputs = new Dictionary<int, int>();
 
-            if (int.TryParse(input, out var cupcakeId))
+            while (true)
             {
-                return cupcakeId;
+                ConsoleDisplay.CupcakeList(cupcakes);
+                Console.WriteLine("Please enter the number of a cupcake that you would like to order\n" +
+                "or 'C' to continue:");
+
+                GetMenuInput(out input);
+                
+                if (input == "C")
+                {
+                    break;
+                }
+                else
+                {
+                    if (int.TryParse(input, out var cupcakeId))
+                    {
+                        if (!p0Repo.CheckCupcakeExists(cupcakeId))
+                        {
+                            logger.Error($"{cupcakeId} is not in the list of cupcakes.");
+                            foreach (var item in cupcakeInputs) { cupcakeInputs.Clear(); }
+                            return cupcakeInputs;
+                        }
+                        cupcakeInputs[cupcakeId] = GetCupcakeQuantity();
+                        if (cupcakeInputs[cupcakeId] == -1)
+                        {
+                            foreach (var item in cupcakeInputs) { cupcakeInputs.Clear(); }
+                            return cupcakeInputs;
+                        }
+                    }
+                    else
+                    {
+                        logger.Error($"Invalid input {input}");
+                        foreach (var item in cupcakeInputs) { cupcakeInputs.Clear(); }
+                        return cupcakeInputs;
+                    }
+                }
             }
-            else
-            {
-                logger.Error($"Invalid input {input}");
-                return -1;
-            }
+            return cupcakeInputs;
         }
 
         public static int GetCupcakeQuantity()
@@ -270,6 +300,11 @@ namespace Project0
 
             if (int.TryParse(input, out var qnty))
             {
+                if (!Library.Order.CheckCupcakeQuantity(qnty))
+                {
+                    Console.WriteLine("Order quantity for all cupcakes must be between 1 and 500.");
+                    return -1;
+                }
                 return qnty;
             }
             else
@@ -293,7 +328,9 @@ namespace Project0
                 }
                 else
                 {
-                    ConsoleDisplay.DisplayOrder(p0Repo.GetCupcakeOrder(orderId), p0Repo.GetAllCupcakes().ToList());
+                    ConsoleDisplay.DisplayOrder(p0Repo.GetCupcakeOrder(orderId),
+                        p0Repo.GetOrderItems(orderId).ToList(),
+                        p0Repo.GetAllCupcakes().ToList());
                 }
             }
             else
