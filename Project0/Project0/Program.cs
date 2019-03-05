@@ -104,10 +104,12 @@ namespace Project0
 
         public static void GetDataAndAddCustomer(IProject0Repo p0Repo)
         {
+            NLog.ILogger logger = LogManager.GetCurrentClassLogger();
+
             var locations = p0Repo.GetAllLocations().ToList();
             if (locations.Count <= 0)
             {
-                Console.WriteLine("You must add at least one store location before you can add a customer.");
+                logger.Error("You must add at least one store location before you can add a customer.");
                 return;
             }
 
@@ -122,7 +124,7 @@ namespace Project0
             if (locationId == -1) { return; }
             if (!p0Repo.CheckLocationExists(locationId))
             {
-                Console.WriteLine("The store location that you entered is not in the system.");
+                logger.Error("The store location that you entered is not in the system.");
                 return;
             }
 
@@ -138,7 +140,7 @@ namespace Project0
             List<Library.Customer> customers = p0Repo.GetAllCustomers().ToList();
             if (customers.Count == 0)
             {
-                Console.WriteLine("You have to add at least one customer before you can add an order.");
+                logger.Error("You have to add at least one customer before you can add an order.");
                 return;
             }
             int customerId = ConsoleRead.GetCustomer(p0Repo);
@@ -148,18 +150,18 @@ namespace Project0
             }
             if (!p0Repo.CheckCustomerExists(customerId))
             {
-                logger.Error($"{customerId} is not in the list of customers.");
+                logger.Error($"Customer {customerId} is not in the list of customers.");
                 return;
             }
             int locationId = ConsoleRead.GetLocation(p0Repo,
-                "Please enter a valid store Id for the order or 'd' for customer default:", customerId);
+                "Please enter a valid store Id for the order or 'd' for customer default location:", customerId);
             if (locationId == -1)
             {
                 return;
             }
             if (!p0Repo.CheckLocationExists(locationId))
             {
-                logger.Error($"{locationId} is not in the list of stores.");
+                logger.Error($"Location {locationId} is not in the list of stores.");
                 return;
             }
             Dictionary<int, int> cupcakeInputs = ConsoleRead.GetCupcakes(p0Repo);
@@ -178,26 +180,26 @@ namespace Project0
             }
             if (!cupcakeFound)
             {
-                Console.WriteLine("You must enter at least one cupcake to place an order.");
+                logger.Error("You must enter at least one cupcake to place an order.");
                 return;
             }
             var orders = p0Repo.GetAllOrders().ToList();
             var orderItems = p0Repo.GetAllOrderItems().ToList();
             if (!Library.Location.CheckCanOrderCupcake(locationId, cupcakeInputs, orders, orderItems))
             {
-                Console.WriteLine("This store has exhausted supply of that cupcake. Try back in 24 hours.");
+                logger.Error("This store has exhausted supply of that cupcake. Try back in 24 hours.");
                 return;
             }
             var recipes = p0Repo.GetRecipes(cupcakeInputs);
             var locationInv = p0Repo.GetLocationInv(locationId);
             if (!Library.Location.CheckOrderFeasible(recipes, locationInv, cupcakeInputs))
             {
-                Console.WriteLine("This store does not have enough ingredients to place the requested order.");
+                logger.Error("This store does not have enough ingredients to place the requested order.");
                 return;
             }
             if (Library.Customer.CheckCustomerCannotOrder(customerId, locationId, orders))
             {
-                Console.WriteLine("Customer can't place an order at this store because it hasn't been 2 hours \n" +
+                logger.Error("Customer can't place an order at this store because it hasn't been 2 hours \n" +
                     "since there last order yet.");
                 return;
             }

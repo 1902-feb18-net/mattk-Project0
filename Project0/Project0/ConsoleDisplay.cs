@@ -87,16 +87,18 @@ namespace Project0
                 {
                     modOrders.Add(item);
                 }
-                DisplayOrders(p0Repo, modOrders, orderItems, cupcakes, locations, "List of Orders (cheapest to most expensive):");
+                DisplayOrders(p0Repo, modOrders, orderItems, cupcakes, locations, 
+                    "List of Orders (cheapest to most expensive):");
             }
             else if (input == "X")
             {
-                //foreach (var item in orders.OrderByDescending(o =>
-                //        (o.OrderQuantity * cupcakes.Single(c => c.Id == o.OrderCupcake).Cost)))
-                //{
-                //    modOrders.Add(item);
-                //}
-                //DisplayOrders(p0Repo, modOrders, cupcakes, locations, "List of Orders (most expensive to cheapest):");
+                foreach (var item in orders.OrderByDescending(o =>
+                o.GetTotalCost(p0Repo.GetOrderItems(o.Id).ToList(), cupcakes)))
+                {
+                    modOrders.Add(item);
+                }
+                DisplayOrders(p0Repo, modOrders, orderItems, cupcakes, locations,
+                    "List of Orders (most expensive to cheapest):");
             }
             else
             {

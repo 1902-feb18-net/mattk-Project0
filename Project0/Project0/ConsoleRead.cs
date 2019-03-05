@@ -17,6 +17,8 @@ namespace Project0
 
         public static void LocationOrders(IProject0Repo p0Repo)
         {
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
             int locationId = GetLocation(p0Repo,
                 "Please enter the store location Id to get that location's orders:", -1);
             if (locationId == -1)
@@ -25,7 +27,7 @@ namespace Project0
             }
             if (!p0Repo.CheckLocationExists(locationId))
             {
-                Console.WriteLine("This location is not in the system.");
+                logger.Error("This location is not in the system.");
                 return;
             }
 
@@ -75,12 +77,12 @@ namespace Project0
                 }
                 else
                 {
-                    Console.WriteLine("There is no one in the system with that first name and last name.");
+                    logger.Error("There is no one in the system with that first name and last name.");
                 }
             }
             else
             {
-                Console.WriteLine("There is no one in the system with that first name.");
+                logger.Error("There is no one in the system with that first name.");
             }
         }
 
@@ -99,7 +101,7 @@ namespace Project0
             {
                 if (!p0Repo.CheckCustomerExists(customerId))
                 {
-                    logger.Error($"{customerId} is not in the list of customers.");
+                    logger.Error($"Customer {customerId} is not in the list of customers.");
                     return;
                 }
                 foreach (var item in customers.Where(c => c.Id == customerId))
@@ -275,7 +277,7 @@ namespace Project0
                         }
                         if (cupcakeInputs.ContainsKey(cupcakeId))
                         {
-                            Console.WriteLine("You have already selected that cupcake in this order.");
+                            logger.Error("You have already selected that cupcake in this order.");
                             Console.WriteLine();
                         }
                         else
@@ -311,7 +313,7 @@ namespace Project0
             {
                 if (!Library.Order.CheckCupcakeQuantity(qnty))
                 {
-                    Console.WriteLine("Order quantity for all cupcakes must be between 1 and 500.");
+                    logger.Error("Order quantity for all cupcakes must be between 1 and 500.");
                     return -1;
                 }
                 return qnty;
@@ -333,7 +335,7 @@ namespace Project0
             {
                 if (!p0Repo.CheckOrderExists(orderId))
                 {
-                    Console.WriteLine("That order is not in the system.");
+                    logger.Error("That order is not in the system.");
                 }
                 else
                 {
@@ -352,4 +354,3 @@ namespace Project0
 
 
     
-
