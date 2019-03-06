@@ -175,6 +175,116 @@ namespace Project0.Test
         }
 
         [Fact]
+        public void TestCheckCanOrderCupcakeTrue24HoursLater()
+        {
+            // Arrange
+            int locationId = 1;
+
+            Dictionary<int, int> cupcakeInputs = new Dictionary<int, int>
+            {
+                { 1, 6 },
+                { 4, 80 },
+                { 7, 75 }
+            };
+
+            List<Library.Order> orders = new List<Library.Order>
+            {
+                new Library.Order
+                {
+                    Id = 1,
+                    OrderLocation = 1,
+                    OrderCustomer = 1,
+                    OrderTime = DateTime.Now.AddMinutes(-1441)
+                },
+                new Library.Order
+                {
+                    Id = 2,
+                    OrderLocation = 1,
+                    OrderCustomer = 2,
+                    OrderTime = DateTime.Now.AddMinutes(-1441)
+                },
+                new Library.Order
+                {
+                    Id = 3,
+                    OrderLocation = 1,
+                    OrderCustomer = 3,
+                    OrderTime = DateTime.Now.AddMinutes(-1441)
+                }
+            };
+
+            List<Library.OrderItem> orderItems = new List<Library.OrderItem>
+            {
+                new Library.OrderItem
+                {
+                    Id = 1,
+                    OrderId = 1,
+                    CupcakeId = 1,
+                    Quantity = 400
+                },
+                new Library.OrderItem
+                {
+                    Id = 2,
+                    OrderId = 1,
+                    CupcakeId = 4,
+                    Quantity = 400
+                },
+                new Library.OrderItem
+                {
+                    Id = 3,
+                    OrderId = 1,
+                    CupcakeId = 7,
+                    Quantity = 400
+                },
+                new Library.OrderItem
+                {
+                    Id = 4,
+                    OrderId = 1,
+                    CupcakeId = 1,
+                    Quantity = 400
+                },
+                new Library.OrderItem
+                {
+                    Id = 5,
+                    OrderId = 1,
+                    CupcakeId = 4,
+                    Quantity = 400
+                },
+                new Library.OrderItem
+                {
+                    Id = 6,
+                    OrderId = 1,
+                    CupcakeId = 7,
+                    Quantity = 400
+                },
+                new Library.OrderItem
+                {
+                    Id = 7,
+                    OrderId = 1,
+                    CupcakeId = 1,
+                    Quantity = 400
+                },
+                new Library.OrderItem
+                {
+                    Id = 8,
+                    OrderId = 1,
+                    CupcakeId = 4,
+                    Quantity = 400
+                },
+                new Library.OrderItem
+                {
+                    Id = 9,
+                    OrderId = 1,
+                    CupcakeId = 7,
+                    Quantity = 400
+                },
+            };
+
+            // Act and Assert
+            Assert.True(Library.Location.CheckCanOrderCupcake(locationId, cupcakeInputs,
+                orders, orderItems));
+        }
+
+        [Fact]
         public void TestCheckOrderFeasibleInvGreaterTrue()
         {
             // Arrange

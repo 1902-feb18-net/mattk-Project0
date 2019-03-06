@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
+using NLog;
 
 namespace Project0.DataAccess
 {
@@ -14,23 +17,51 @@ namespace Project0.DataAccess
             Context = dbContext;
         }
 
+        public void SaveChangesAndCheckException()
+        {
+            ILogger logger = LogManager.GetCurrentClassLogger();
+            
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch (InvalidOperationException ex)
+            {
+                logger.Error(ex);
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+            }
+        }
+
         public void AddLocation()
         {
             Context.Location.Add(new Location());
-            Context.SaveChanges();
+            SaveChangesAndCheckException();
         }
 
         public void FillLocationInventory(int locationId)
         {
-            foreach (var item in Context.Ingredient.ToList())
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
             {
-                var locationInv = new LocationInventory();
-                locationInv.IngredientId = item.IngredientId;
-                locationInv.LocationId = locationId;
-                locationInv.Amount = 120;
-                Context.LocationInventory.Add(locationInv);
+                foreach (var item in Context.Ingredient.ToList())
+                {
+                    var locationInv = new LocationInventory();
+                    locationInv.IngredientId = item.IngredientId;
+                    locationInv.LocationId = locationId;
+                    locationInv.Amount = 120;
+                    Context.LocationInventory.Add(locationInv);
+                }
             }
-            Context.SaveChanges();
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+            }
+            
+            SaveChangesAndCheckException();
         }
 
         public void AddCustomer(string fName, string lName, int locationId)
@@ -42,7 +73,7 @@ namespace Project0.DataAccess
                 DefaultLocation = locationId
             };
             Context.Customer.Add(newCustomer);
-            Context.SaveChanges();
+            SaveChangesAndCheckException();
         }
 
         public void AddCupcakeOrder(int locationId, int customerId)
@@ -54,7 +85,7 @@ namespace Project0.DataAccess
                 OrderTime = DateTime.Now
             };
             Context.CupcakeOrder.Add(newOrder);
-            Context.SaveChanges();
+            SaveChangesAndCheckException();
         }
 
         public void AddCupcakeOrderItems(int orderId, Dictionary<int, int> cupcakeInputs)
@@ -69,133 +100,343 @@ namespace Project0.DataAccess
                 };
                 Context.CupcakeOrderItem.Add(newOrderItem);
             }
-            Context.SaveChanges();
+            SaveChangesAndCheckException();
         }
 
         public int GetLastLocationAdded()
         {
-            return Context.Location.OrderByDescending(x => x.LocationId).First().LocationId;
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Context.Location.OrderByDescending(x => x.LocationId).First().LocationId;
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return -1;
+            }
         }
 
         public int GetLastCustomerAdded()
         {
-            return Context.Customer.OrderByDescending(x => x.CustomerId).First().CustomerId;
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Context.Customer.OrderByDescending(x => x.CustomerId).First().CustomerId;
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return -1;
+            }
         }
 
         public int GetLastCupcakeOrderAdded()
         {
-            return Context.CupcakeOrder.OrderByDescending(x => x.OrderId).First().OrderId;
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Context.CupcakeOrder.OrderByDescending(x => x.OrderId).First().OrderId;
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return -1;
+            }
         }
 
         public int GetDefaultLocation(int customerId)
         {
-            return Context.Customer.Single(c => c.CustomerId == customerId).DefaultLocation;
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Context.Customer.Single(c => c.CustomerId == customerId).DefaultLocation;
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return -1;
+            }
         }
 
         public Library.Order GetCupcakeOrder(int orderId)
         {
-            return Mapper.Map(Context.CupcakeOrder.Single(co => co.OrderId == orderId));
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.CupcakeOrder.Single(co => co.OrderId == orderId));
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public Library.Cupcake GetCupcake(int cupcakeId)
         {
-            return Mapper.Map(Context.Cupcake.Single(c => c.CupcakeId == cupcakeId));
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.Cupcake.Single(c => c.CupcakeId == cupcakeId));
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public Dictionary<int, Dictionary<int, decimal>> GetRecipes(Dictionary<int, int> cupcakeInputs)
         {
-            Dictionary<int, Dictionary<int, decimal>> recipes = new Dictionary<int, Dictionary<int, decimal>>();
+            ILogger logger = LogManager.GetCurrentClassLogger();
 
-            // Get each recipe for each cupcake that is in the order
-            foreach (var item in cupcakeInputs)
+            try
             {
-                Dictionary<int, decimal> recipe = new Dictionary<int, decimal>();
-                foreach (var recipeItem in Context.RecipeItem.Where(r => r.CupcakeId == item.Key).ToList())
-                {
-                    recipe[recipeItem.IngredientId] = recipeItem.Amount;
-                }
-                recipes[item.Key] = recipe;
-            }
+                Dictionary<int, Dictionary<int, decimal>> recipes = new Dictionary<int, Dictionary<int, decimal>>();
 
-            return recipes;
+                // Get each recipe for each cupcake that is in the order
+                foreach (var item in cupcakeInputs)
+                {
+                    Dictionary<int, decimal> recipe = new Dictionary<int, decimal>();
+                    foreach (var recipeItem in Context.RecipeItem.Where(r => r.CupcakeId == item.Key).ToList())
+                    {
+                        recipe[recipeItem.IngredientId] = recipeItem.Amount;
+                    }
+                    recipes[item.Key] = recipe;
+                }
+
+                return recipes;
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public Dictionary<int, decimal> GetLocationInv(int locationId)
         {
-            Dictionary<int, decimal> locationInv = new Dictionary<int, decimal>();
-            foreach (var item in Context.LocationInventory.Where(li => li.LocationId == locationId))
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
             {
-                locationInv[item.IngredientId] = item.Amount;
+                Dictionary<int, decimal> locationInv = new Dictionary<int, decimal>();
+                foreach (var item in Context.LocationInventory.Where(li => li.LocationId == locationId))
+                {
+                    locationInv[item.IngredientId] = item.Amount;
+                }
+                return locationInv;
             }
-            return locationInv;
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.Location> GetAllLocations()
         {
-            return Mapper.Map(Context.Location.ToList());
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.Location.ToList());
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.Customer> GetAllCustomers()
         {
-            return Mapper.Map(Context.Customer.ToList());
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.Customer.ToList());
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.Cupcake> GetAllCupcakes()
         {
-            return Mapper.Map(Context.Cupcake.ToList());
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.Cupcake.ToList());
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.Order> GetAllOrders()
         {
-            return Mapper.Map(Context.CupcakeOrder.ToList());
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.CupcakeOrder.ToList());
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.OrderItem> GetAllOrderItems()
         {
-            return Mapper.Map(Context.CupcakeOrderItem.ToList());
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.CupcakeOrderItem.ToList());
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.Order> GetLocationOrderHistory(int locationId)
         {
-            return Mapper.Map(Context.CupcakeOrder.Where(co => co.LocationId == locationId).ToList());
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.CupcakeOrder.Where(co => co.LocationId == locationId).ToList());
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.Order> GetCustomerOrderHistory(int customerId)
         {
-            return Mapper.Map(Context.CupcakeOrder.Where(co => co.CustomerId == customerId).ToList());
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.CupcakeOrder.Where(co => co.CustomerId == customerId).ToList());
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.OrderItem> GetOrderItems(int orderId)
         {
-            return Mapper.Map(Context.CupcakeOrderItem.Where(coi => coi.OrderId == orderId));
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Mapper.Map(Context.CupcakeOrderItem.Where(coi => coi.OrderId == orderId));
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public IEnumerable<Library.OrderItem> GetCustomerOrderItems(int customerId)
         {
-            var customerOrders = Context.CupcakeOrder.Where(co => co.CustomerId == customerId)
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                var customerOrders = Context.CupcakeOrder.Where(co => co.CustomerId == customerId)
                 .Select(co => co.OrderId)
                 .ToList();
-            return Mapper.Map(Context.CupcakeOrderItem.Where(coi => customerOrders.Contains(coi.OrderId)));
+                return Mapper.Map(Context.CupcakeOrderItem.Where(coi => customerOrders.Contains(coi.OrderId)));
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
         }
 
         public bool CheckLocationExists(int locationId)
         {
-            return Context.Location.Any(l => l.LocationId == locationId);
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Context.Location.Any(l => l.LocationId == locationId);
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return false;
+            }
         }
 
         public bool CheckCustomerExists(int customerId)
         {
-            return Context.Customer.Any(l => l.CustomerId == customerId);
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Context.Customer.Any(l => l.CustomerId == customerId);
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return false;
+            }
         }
 
         public bool CheckCupcakeExists(int cupcakeId)
         {
-            return Context.Cupcake.Any(l => l.CupcakeId == cupcakeId);
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Context.Cupcake.Any(l => l.CupcakeId == cupcakeId);
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return false;
+            }
         }
 
         public bool CheckOrderExists(int orderId)
         {
-            return Context.CupcakeOrder.Any(l => l.OrderId == orderId);
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                return Context.CupcakeOrder.Any(l => l.OrderId == orderId);
+            }
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+                return false;
+            }
         }
 
         public void UpdateLocationInv(int locationId, Dictionary<int, Dictionary<int, decimal>> recipes,
@@ -205,14 +446,24 @@ namespace Project0.DataAccess
             // the order ingredient amounts required from the store location's inventory.
             // The store location should already have been checked to make sure that its inventory
             // will not go negative from the order.
-            foreach (var locationInv in Context.LocationInventory.Where(li => li.LocationId == locationId))
+
+            ILogger logger = LogManager.GetCurrentClassLogger();
+
+            try
             {
-                foreach (var cupcake in cupcakeInputs)
+                foreach (var locationInv in Context.LocationInventory.Where(li => li.LocationId == locationId))
                 {
-                    locationInv.Amount -= recipes[cupcake.Key][locationInv.IngredientId] * cupcake.Value;
+                    foreach (var cupcake in cupcakeInputs)
+                    {
+                        locationInv.Amount -= recipes[cupcake.Key][locationInv.IngredientId] * cupcake.Value;
+                    }
                 }
             }
-            Context.SaveChanges();
+            catch (SqlException ex)
+            {
+                logger.Error(ex);
+            }
+            SaveChangesAndCheckException();
         }
     }
 }
